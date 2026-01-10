@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STANY MIN TV ADMIN - ULTIMATE CONTROL</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --primary: #FF0000;
+        --bg: #000000;
+        --card: #111111;
+        --border: #222;
+        --text: #ffffff;
+        --gray: #888;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; outline: none; }
+    body { background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { width: 260px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; }
+    .nav-item { padding: 12px 15px; border-radius: 12px; cursor: pointer; margin-bottom: 5px; display: flex; align-items: center; gap: 12px; color: #888; transition: 0.3s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: #fff; }
+
+    /* MAIN CONTENT */
+    .main { flex: 1; overflow-y: auto; padding: 30px; padding-bottom: 100px; }
+    .section { display: none; }
+    .section.active { display: block; animation: fadeIn 0.4s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* FORMS */
+    .app-card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 20px; margin-bottom: 25px; }
+    h2 { margin-bottom: 20px; color: var(--primary); letter-spacing: 1px; }
+    label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--gray); font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; margin-bottom: 15px; }
+    input:focus { border-color: var(--primary); }
+    .btn { padding: 12px 25px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #fff; transition: 0.3s; }
+    .btn:active { transform: scale(0.95); }
+
+    /* EPISODE DESIGN */
+    .ep-box { background: #080808; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-bottom: 15px; }
+    .token-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #222; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: var(--primary); }
+</style>
+</head>
+<body>
+
+    <!-- AUTH OVERLAY -->
+    <div id="authOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
+        <div class="app-card" style="width:350px; text-align:center;">
+            <h2>ADMIN LOGIN</h2>
+            <input type="email" id="adminEmail" placeholder="Email">
+            <input type="password" id="adminPass" placeholder="Password">
+            <button class="btn" onclick="login()" style="width:100%">LOGIN</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h1 style="color:var(--primary); font-size:22px; margin-bottom:30px;">STANY PANEL</h1>
+        <div class="nav-item active" onclick="showSection('ads')"><i class="fas fa-ad"></i>Ads Manager</div>
+        <div class="nav-item" onclick="showSection('tokens')"><i class="fas fa-key"></i>Token Factory</div>
+        <div class="nav-item" onclick="showSection('library')"><i class="fas fa-book"></i>Library Builder</div>
+        <div class="nav-item" onclick="showSection('channels')"><i class="fas fa-tv"></i>Channels (DRM)</div>
+        <div class="nav-item" onclick="showSection('movies')"><i class="fas fa-film"></i>Movies</div>
+        <div class="nav-item" onclick="showSection('users')"><i class="fas fa-users"></i>HWID Management</div>
+        <div class="nav-item" style="margin-top:auto; color:red" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i>Logout</div>
+    </div>
+
+    <div class="main">
+        
+        <!-- ADS MANAGER -->
+        <div id="ads" class="section active">
+            <h2>Ultimate Ads Manager</h2>
+            <div class="app-card">
+                <label>Ad Type</label>
+                <select id="ad-type" onchange="toggleAdFields()">
+                    <option value="image">Image Ad</option>
+                    <option value="video">Video Ad</option>
+                    <option value="slider">Slider Ad (Multiple Images)</option>
+                </select>
+                
+                <label>Header Text (Maneno ya Juu)</label>
+                <input id="ad-header" placeholder="Mfano: OFFICIAL SPONSOR">
+                
+                <label>Media URL (Picha au Video)</label>
+                <input id="ad-url" placeholder="https://...">
+                
+                <textarea id="ad-slider-urls" placeholder="Slider: Weka link za picha zitenganishe kwa mkato (,)" style="display:none"></textarea>
+                
+                <label>Sponsor Link (User akibonyeza aende wapi?)</label>
+                <input id="ad-link" placeholder="https://wa.me/...">
+                
+                <label>Footer Text (Maneno ya Chini)</label>
+                <input id="ad-footer" placeholder="Mfano: Bonyeza hapa kujiunga">
+                
+                <label>Duration (Seconds)</label>
+                <input id="ad-duration" type="number" value="15">
+                
+                <button class="btn" onclick="saveAd()">ADD TO RANDOM POOL</button>
+            </div>
+            <div id="ads-list"></div>
+        </div>
+
+        <!-- TOKEN FACTORY -->
+        <div id="tokens" class="section">
+            <h2>Premium Token Factory</h2>
+            <div class="app-card">
+                <label>How many tokens?</label>
+                <input id="tk-count" type="number" placeholder="Enter number">
+                <button class="btn" onclick="generateTokens()">GENERATE ONE-TIME TOKENS</button>
+            </div>
+            <div class="app-card" id="tk-list"></div>
+        </div>
+
+        <!-- LIBRARY BUILDER (SIMULIZI & TECH) -->
+        <div id="library" class="section">
+            <h2>Library (Book & Episode System)</h2>
+            <div class="app-card">
+                <label>Category</label>
+                <select id="lib-cat">
+                    <option value="simulizi">Simulizi (Stories)</option>
+                    <option value="tech">Technology & Cybersecurity</option>
+                </select>
+                <label>Book Title (Jina la Simulizi/Tech)</label>
+                <input id="lib-title" placeholder="Mfano: KIFO CHA AJABU">
+                <label>Author (Mwandishi)</label>
+                <input id="lib-author" placeholder="Jina lako">
+                <label>Description (Inahusu nini?)</label>
+                <textarea id="lib-desc" placeholder="Summary fupi..."></textarea>
+                
+                <div id="episodes-container">
+                    <h3>Episodes / Parts</h3>
+                    <div class="ep-box">
+                        <input class="ep-title" placeholder="Part 1 Title (e.g. MKASA UNAANZA)">
+                        <textarea class="ep-content" rows="5" placeholder="Andika maudhui hapa..."></textarea>
+                    </div>
+                </div>
+                
+                <button class="btn" style="background:#333; margin-bottom:15px;" onclick="addEpisodeField()">+ ADD ANOTHER PART</button>
+                <button class="btn" onclick="saveToLibrary()" style="width:100%">PUBLISH TO USER APP</button>
+            </div>
+        </div>
+
+        <!-- CHANNELS (DRM) -->
+        <div id="channels" class="section">
+            <h2>Live Channels & DRM Config</h2>
+            <div class="app-card">
+                <input id="ch-name" placeholder="Channel Name">
+                <input id="ch-logo" placeholder="Logo URL">
+                <label>Player Engine</label>
+                <select id="ch-player">
+                    <option value="internal">Standard Player</option>
+                    <option value="drm">DRM Pro (Token ID + License)</option>
+                </select>
+                <input id="ch-url" placeholder="Stream URL (M3U8/MPD)">
+                <input id="ch-license" placeholder="License URL (Widevine)">
+                <input id="ch-token" placeholder="Bearer Token ID (Optional)">
+                <label>Access Control</label>
+                <select id="ch-access"><option value="FREE">FREE</option><option value="VIP">VIP</option></select>
+                <button class="btn" onclick="saveChannel()">SAVE CHANNEL</button>
+            </div>
+            <div id="chan-list"></div>
+        </div>
+
+        <!-- USERS HWID -->
+        <div id="users" class="section">
+            <h2>User HWID Lock Management</h2>
+            <div id="user-list"></div>
+        </div>
+
+    </div>
+
+    <div id="toast" style="position:fixed; bottom:20px; right:20px; background:var(--primary); padding:10px 20px; border-radius:10px; display:none; z-index:10000;">Saved!</div>
+
+    <script>
+        // CONFIG (Same as your User App)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiexD5WK9GLhQldr6zNmC8iYWc4em5eyM",
+            authDomain: "stany-min-tv.firebaseapp.com",
+            databaseURL: "https://stany-min-tv-default-rtdb.firebaseio.com",
+            projectId: "stany-min-tv",
+            storageBucket: "stany-min-tv.firebasestorage.app",
+            messagingSenderId: "16513327552",
+            appId: "1:16513327552:web:b4b2247053f83aa0b8e825"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        // AUTH
+        auth.onAuthStateChanged(u => {
+            if(u) { document.getElementById('authOverlay').style.display='none'; init(); }
+            else { document.getElementById('authOverlay').style.display='flex'; }
+        });
+
+        function login() {
+            const e = document.getElementById('adminEmail').value;
+            const p = document.getElementById('adminPass').value;
+            auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
+        }
+
+        function init() {
+            loadAds(); loadTokens(); loadUsers(); loadChannels();
+        }
+
+        // NAVIGATION
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- ADS MANAGER LOGIC ---
+        function toggleAdFields() {
+            const type = document.getElementById('ad-type').value;
+            document.getElementById('ad-url').style.display = (type === 'slider') ? 'none' : 'block';
+            document.getElementById('ad-slider-urls').style.display = (type === 'slider') ? 'block' : 'none';
+        }
+
+        function saveAd() {
+            const ad = {
+                type: document.getElementById('ad-type').value,
+                header: document.getElementById('ad-header').value,
+                link: document.getElementById('ad-link').value,
+                footer: document.getElementById('ad-footer').value,
+                duration: document.getElementById('ad-duration').value,
+                timestamp: Date.now()
+            };
+            if(ad.type === 'slider') ad.images = document.getElementById('ad-slider-urls').value.split(',');
+            else ad.url = document.getElementById('ad-url').value;
+
+            db.ref('ads').push(ad).then(() => { showToast("Ad Added!"); loadAds(); });
+        }
+
+        function loadAds() {
+            db.ref('ads').on('value', snap => {
+                const list = document.getElementById('ads-list'); list.innerHTML = '';
+                snap.forEach(c => {
+                    list.innerHTML += `<div class="app-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>${c.val().header} (${c.val().type})</span>
+                        <button class="btn" style="background:red" onclick="del('ads/${c.key}')">Delete</button>
+                    </div>`;
+                });
+            });
+        }
+
+        // --- TOKEN FACTORY LOGIC ---
+        function generateTokens() {
+            const count = document.getElementById('tk-count').value;
+            for(let i=0; i<count; i++) {
+                const tk = 'STANY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                db.ref('tokens/' + tk).set({ status: 'unused' });
+            }
+            showToast(count + " Tokens Created!");
+        }
+
+        function loadTokens() {
+            db.ref('tokens').on('value', snap => {
+                const list = document.getElementById('tk-list'); list.innerHTML = '<h4>Latest Tokens</h4>';
+                snap.forEach(c => {
+                    list.innerHTML += `<div class="token-row">
+                        <span>${c.key}</span>
+                        <span style="color:${c.val().status === 'used' ? 'gray' : 'lime'}">${c.val().status.toUpperCase()}</span>
+                    </div>`;
+                });
+            });
+        }
+
+        // --- LIBRARY BUILDER LOGIC ---
+        function addEpisodeField() {
+            const container = document.getElementById('episodes-container');
+            const div = document.createElement('div');
+            div.className = 'ep-box';
+            div.innerHTML = `
+                <input class="ep-title" placeholder="Part Title">
+                <textarea class="ep-content" rows="5" placeholder="Content..."></textarea>
+            `;
+            container.appendChild(div);
+        }
+
+        function saveToLibrary() {
+            const episodes = [];
+            document.querySelectorAll('.ep-box').forEach(box => {
+                episodes.push({
+                    partTitle: box.querySelector('.ep-title').value,
+                    content: box.querySelector('.ep-content').value
+                });
+            });
+
+            const book = {
+                category: document.getElementById('lib-cat').value,
+                title: document.getElementById('lib-title').value,
+                author: document.getElementById('lib-author').value,
+                description: document.getElementById('lib-desc').value,
+                episodes: episodes,
+                timestamp: Date.now()
+            };
+
+            db.ref('library').push(book).then(() => showToast("Published to Library!"));
+        }
+
+        // --- CHANNELS (DRM) LOGIC ---
+        function saveChannel() {
+            const data = {
+                name: document.getElementById('ch-name').value,
+                logo: document.getElementById('ch-logo').value,
+                playerType: document.getElementById('ch-player').value,
+                streamURL: document.getElementById('ch-url').value,
+                licenseURL: document.getElementById('ch-license').value,
+                tokenID: document.getElementById('ch-token').value,
+                access: document.getElementById('ch-access').value
+            };
+            db.ref('channels').push(data).then(() => showToast("Channel Added!"));
+        }
+
+        function loadChannels() {
+            db.ref('channels').on('value', snap => {
+                const list = document.getElementById('chan-list'); list.innerHTML = '';
+                snap.forEach(c => {
+                    list.innerHTML += `<div class="app-card" style="display:flex; justify-content:space-between;">
+                        <span>${c.val().name}</span>
+                        <button class="btn" style="background:red" onclick="del('channels/${c.key}')">Delete</button>
+                    </div>`;
+                });
+            });
+        }
+
+        // --- USER HWID LOGIC ---
+        function loadUsers() {
+            db.ref('users').on('value', snap => {
+                const list = document.getElementById('user-list'); list.innerHTML = '';
+                snap.forEach(c => {
+                    const u = c.val();
+                    list.innerHTML += `<div class="app-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div><b>${u.email}</b><br><small>Locked HWID: ${u.hwid || 'None'}</small></div>
+                            <button class="btn" style="background:#444" onclick="resetHWID('${c.key}')">Reset Device Lock</button>
+                        </div>
+                    </div>`;
+                });
+            });
+        }
+
+        function resetHWID(uid) {
+            db.ref('users/'+uid).update({ hwid: "" }).then(() => showToast("HWID Reset!"));
+        }
+
+        // --- UTILS ---
+        function showToast(msg) {
+            const t = document.getElementById('toast'); t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display='none', 3000);
+        }
+
+        function del(path) { if(confirm("Are you sure?")) db.ref(path).remove(); }
+
+    </script>
+</body>
+</html>
