@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY ADMIN - SUPREME COMMAND PRO</title>
+    <title>STANY ADMIN - SUPREME COMMAND</title>
     
     <!-- FONTS & ICONS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
@@ -42,39 +42,50 @@
         .page-view.active { display: block; }
         h2 { font-size: 13px; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; font-weight: 800; border-left: 3px solid var(--primary); padding-left: 8px; }
 
-        /* FORMS */
+        /* CARDS & ITEMS */
         .app-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 15px; margin-bottom: 12px; }
-        label { display: block; font-size: 9px; color: var(--gray); font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 8px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 11px; }
-        .btn { padding: 8px 12px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; transition: 0.2s; }
-        .btn-p { background: var(--primary); color: white; width: 100%; margin-top: 5px; }
-        .btn-d { background: #1a1a1a; color: white; }
-
-        /* CRUD LISTS */
         .item-row { background: #050505; border: 1px solid #111; padding: 10px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
         .item-info b { font-size: 11px; color: var(--primary); display: block; }
         .item-info span { font-size: 9px; color: #555; display: block; }
-        .action-btns { display: flex; gap: 6px; }
-        .action-btns i { cursor: pointer; padding: 7px; border-radius: 6px; background: #111; font-size: 11px; }
+        
+        .chat-item { border-left: 3px solid transparent; cursor: pointer; transition: 0.2s; }
+        .chat-item.unread { border-left: 3px solid var(--primary); background: #110000; }
+
+        /* FORMS */
+        label { display: block; font-size: 9px; color: var(--gray); font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 8px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 11px; }
+        .btn { padding: 8px 12px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; }
+        .btn-p { background: var(--primary); color: white; width: 100%; margin-top: 5px; }
+        .btn-d { background: #1a1a1a; color: white; font-size: 9px; }
+
+        /* ACTION ICONS */
+        .action-btns i { cursor: pointer; padding: 7px; border-radius: 6px; background: #111; font-size: 11px; margin-left: 4px; }
         .fa-trash { color: #ff3b30; }
         .fa-edit { color: #007aff; }
 
-        .status-badge { padding: 2px 5px; border-radius: 4px; font-size: 8px; font-weight: 900; }
-        .prem { background: #ffd700; color: #000; }
-
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 8px 20px; border-radius: 20px; font-size: 10px; display: none; z-index: 20000; font-weight: bold; }
-        .ep-box { background: #000; padding: 8px; border: 1px solid #222; border-radius: 8px; margin-bottom: 8px; position: relative; }
         ::-webkit-scrollbar { width: 0; }
+        .ep-box { background: #000; padding: 8px; border: 1px solid #222; border-radius: 8px; margin-bottom: 8px; position: relative; }
     </style>
 </head>
 <body>
 
+    <!-- AUTH OVERLAY -->
+    <div id="authOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
+        <div class="app-card" style="width:260px; text-align:center;">
+            <h2>ADMIN LOGIN</h2>
+            <input type="email" id="adminEmail" placeholder="Email">
+            <input type="password" id="adminPass" placeholder="Password">
+            <button class="btn btn-p" onclick="login()">ENTER</button>
+        </div>
+    </div>
+
     <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="nav-icon active" onclick="switchNav('home', this)"><i class="fas fa-home"></i></div>
-        <div class="nav-icon" onclick="switchNav('users', this)"><i class="fas fa-users"></i></div>
-        <div class="nav-icon" onclick="switchNav('categories', this)"><i class="fas fa-tags"></i></div>
+        <div class="nav-icon" onclick="switchNav('users', this)"><i class="fas fa-users-cog"></i></div>
         <div class="nav-icon" onclick="switchNav('content', this)"><i class="fas fa-play"></i></div>
+        <div class="nav-icon" onclick="switchNav('categories', this)"><i class="fas fa-tags"></i></div>
         <div class="nav-icon" onclick="switchNav('ads', this)"><i class="fas fa-ad"></i></div>
         <div class="nav-icon" onclick="switchNav('library', this)"><i class="fas fa-book"></i></div>
         <div class="nav-icon" onclick="switchNav('tokens', this)"><i class="fas fa-key"></i></div>
@@ -83,6 +94,7 @@
             <div class="nav-dot" id="chat-alert"></div>
         </div>
         <div class="nav-icon" onclick="switchNav('settings', this)"><i class="fas fa-cog"></i></div>
+        <div class="nav-icon" onclick="auth.signOut()" style="margin-top:auto; color:red;"><i class="fas fa-power-off"></i></div>
     </div>
 
     <div class="main">
@@ -106,111 +118,125 @@
             </div>
         </div>
 
-        <!-- 2. USERS MANAGEMENT -->
+        <!-- 2. USERS & HWID -->
         <div id="view-users" class="page-view">
-            <h2>USER TRACKER</h2>
+            <h2>USER TRACKER & PASSLOCK</h2>
+            <input type="text" id="search-user" placeholder="Search User Email..." onkeyup="searchUsers()">
             <div id="user-list"></div>
         </div>
 
-        <!-- 3. CATEGORY MANAGER -->
+        <!-- 3. CATEGORIES -->
         <div id="view-categories" class="page-view">
+            <h2>CATEGORIES</h2>
             <div class="app-card">
-                <h3>MANAGE CATEGORIES</h3>
                 <input type="hidden" id="cat-id">
-                <input id="cat-name" placeholder="Category Name (e.g. Sports)">
+                <input id="cat-name" placeholder="Category Name">
                 <select id="cat-type"><option value="channels">Live Streams</option><option value="movies">Movies</option></select>
                 <button class="btn btn-p" onclick="saveCategory()">SAVE CATEGORY</button>
             </div>
             <div id="cat-list"></div>
         </div>
 
-        <!-- 4. CONTENT (CHANNELS/MOVIES) -->
+        <!-- 4. CONTENT (DRM) -->
         <div id="view-content" class="page-view">
             <div class="app-card">
-                <h3>MANAGE CONTENT</h3>
+                <h3 id="form-content-title" style="font-size:11px; margin-bottom:8px;">ADD CONTENT</h3>
                 <input type="hidden" id="content-id">
-                <select id="content-db" onchange="updateCatDropdown()"><option value="channels">Live Channel</option><option value="movies">Movies</option></select>
+                <select id="content-db" onchange="updateCatDropdown()"><option value="channels">Live Channel</option><option value="movies">Movies</option><option value="adultContent">Adult 18+</option></select>
                 <input id="content-name" placeholder="Title">
                 <input id="content-url" placeholder="URL">
                 <input id="content-logo" placeholder="Logo URL">
                 <label>Category</label>
                 <select id="content-cat-select"></select>
                 <select id="content-player"><option value="internal">Standard Player</option><option value="drm">DRM Player</option></select>
-                <input id="content-license" placeholder="License URL">
-                <button class="btn btn-p" onclick="saveContent()">SAVE CONTENT</button>
+                <input id="content-license" placeholder="License URL (Widevine)">
+                <input id="content-token" placeholder="Token ID">
+                <button class="btn btn-p" onclick="saveContent()">SAVE DATA</button>
             </div>
             <div id="content-list"></div>
         </div>
 
-        <!-- 5. ADS & SPONSORS -->
+        <!-- 5. ADS POOL & SPONSORS -->
         <div id="view-ads" class="page-view">
             <div class="app-card">
-                <h3>MANAGE ADS POOL</h3>
+                <h3>ADS POOL & SPONSORS</h3>
                 <input type="hidden" id="ad-id">
                 <input id="ad-header" placeholder="Header Text">
-                <input id="ad-url" placeholder="Media URL">
-                <label>PLATFORM (20+ Icons)</label>
-                <select id="ad-platform">
-                    <option value="whatsapp">WhatsApp</option><option value="telegram">Telegram</option>
-                    <option value="youtube">YouTube</option><option value="instagram">Instagram</option>
-                    <option value="facebook">Facebook</option><option value="tiktok">TikTok</option>
-                    <option value="twitter">X / Twitter</option><option value="globe">Website</option>
-                </select>
-                <input id="ad-link" placeholder="Social Link URL">
+                <input id="ad-url" placeholder="Media (Image/Video) URL">
                 <input id="ad-sec" type="number" placeholder="Duration (Sec)">
-                <button class="btn btn-p" onclick="saveAd()">SAVE AD</button>
+                <label>SPONSOR LINKS (Add Platforms)</label>
+                <div id="social-inputs">
+                    <!-- WhatsApp, Telegram, Website, nk -->
+                    <input class="input-box" id="ad-link-whatsapp" placeholder="WhatsApp URL">
+                    <input class="input-box" id="ad-link-telegram" placeholder="Telegram URL">
+                    <input class="input-box" id="ad-link-globe" placeholder="Website URL">
+                    <input class="input-box" id="ad-link-youtube" placeholder="YouTube URL">
+                </div>
+                <button class="btn btn-p" onclick="saveAd()">SAVE AD POOL</button>
             </div>
             <div id="ads-list"></div>
         </div>
 
-        <!-- 6. LIBRARY BUILDER -->
+        <!-- 6. LIBRARY & EPISODES -->
         <div id="view-library" class="page-view">
             <div class="app-card">
                 <h3>LIBRARY BUILDER</h3>
                 <input type="hidden" id="lib-id">
-                <input id="lib-title" placeholder="Book Title">
+                <select id="lib-cat"><option value="simulizi">Simulizi</option><option value="tech">Tech Update</option></select>
+                <input id="lib-title" placeholder="Title">
                 <input id="lib-author" placeholder="Author">
                 <input id="lib-drop" placeholder="Drop Image (Cover)">
-                <textarea id="lib-desc" placeholder="About..." rows="2"></textarea>
+                <textarea id="lib-desc" placeholder="Summary..." rows="2"></textarea>
                 <div id="ep-area"></div>
-                <button class="btn btn-d" onclick="addEpField()">+ ADD PART</button>
+                <button class="btn btn-d" onclick="addEpField()">+ ADD PART/EPISODE</button>
                 <button class="btn btn-p" style="margin-top:8px;" onclick="saveLibrary()">PUBLISH</button>
             </div>
             <div id="lib-list"></div>
         </div>
 
-        <!-- 7. TOKENS -->
+        <!-- 7. TOKENS FACTORY -->
         <div id="view-tokens" class="page-view">
             <div class="app-card">
-                <label>Generate Tokens</label>
+                <label>Duration & Quantity</label>
                 <div style="display:flex; gap:5px;">
-                    <input id="tk-qty" type="number" placeholder="Qty" style="width:60px">
-                    <input id="tk-dur" type="number" placeholder="Time" style="width:60px">
-                    <select id="tk-unit" style="flex:1"><option value="hours">Hours</option><option value="days">Days</option></select>
+                    <input id="tk-qty" type="number" placeholder="Qty" style="width:50px">
+                    <input id="tk-dur" type="number" placeholder="Value" style="width:50px">
+                    <select id="tk-unit" style="flex:1">
+                        <option value="seconds">Seconds</option>
+                        <option value="minutes">Minutes</option>
+                        <option value="hours">Hours</option>
+                        <option value="days">Days</option>
+                    </select>
                 </div>
-                <button class="btn btn-p" onclick="generateTokens()">CREATE</button>
+                <button class="btn btn-p" onclick="generateTokens()">CREATE UNIQUE TOKENS</button>
             </div>
             <div id="token-list"></div>
         </div>
 
-        <!-- 8. CHAT SUPPORT -->
+        <!-- 8. SUPPORT CHAT -->
         <div id="view-chat" class="page-view">
+            <h2>INBOX (USER DMS)</h2>
             <div id="chat-list"></div>
+            
             <div id="chat-window" style="display:none;" class="app-card">
                 <h4 id="chat-user-name" style="color:var(--primary);">...</h4>
-                <div id="chat-msgs" style="height:180px; overflow-y:auto; display:flex; flex-direction:column; margin:10px 0; border:1px solid #111; padding:5px;"></div>
-                <input id="reply-input" placeholder="Reply..." style="margin:0">
-                <button class="btn btn-p" onclick="sendReply()">SEND</button>
-                <button class="btn btn-d" onclick="closeChat()">CLOSE</button>
+                <p id="chat-user-email" style="font-size:9px; color:#555; margin-bottom:10px;"></p>
+                <div id="chat-msgs" style="height:200px; overflow-y:auto; display:flex; flex-direction:column; margin-bottom:10px; padding:5px; background:#000;"></div>
+                <div style="display:flex; gap:5px;">
+                    <input id="reply-input" placeholder="Reply..." style="margin:0">
+                    <button class="btn btn-p" style="width:60px" onclick="sendReply()">SEND</button>
+                </div>
+                <button class="btn btn-d" style="width:100%; margin-top:5px;" onclick="closeChat()">CLOSE</button>
             </div>
         </div>
 
         <!-- 9. SETTINGS -->
         <div id="view-settings" class="page-view">
+            <h2>GLOBAL SETTINGS</h2>
             <div class="app-card">
                 <label>WhatsApp Support Number</label>
                 <input id="set-wa" placeholder="e.g. 255712345678">
-                <button class="btn btn-p" onclick="saveSettings()">UPDATE NUMBER</button>
+                <button class="btn btn-p" onclick="saveSettings()">UPDATE</button>
             </div>
         </div>
 
@@ -219,7 +245,7 @@
     <div id="toast">Saved!</div>
 
     <script>
-        // FIREBASE CONFIG
+        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDiexD5WK9GLhQldr6zNmC8iYWc4em5eyM",
             authDomain: "stany-min-tv.firebaseapp.com",
@@ -235,8 +261,11 @@
         let allUsers = {}, categories = [];
 
         auth.onAuthStateChanged(u => {
-            if(u) { init(); }
+            if(u) { document.getElementById('authOverlay').style.display='none'; init(); }
+            else { document.getElementById('authOverlay').style.display='flex'; }
         });
+
+        function login() { auth.signInWithEmailAndPassword(document.getElementById('adminEmail').value, document.getElementById('adminPass').value); }
 
         function init() {
             db.ref('users').on('value', snap => {
@@ -253,62 +282,44 @@
             el.classList.add('active');
         }
 
-        // --- CRUD LOGIC ---
-        function saveCategory() {
-            const id = document.getElementById('cat-id').value;
-            const data = { name: document.getElementById('cat-name').value, type: document.getElementById('cat-type').value };
-            if(id) db.ref('categories/'+id).update(data); else db.ref('categories').push(data);
-            document.getElementById('cat-id').value = ""; document.getElementById('cat-name').value = "";
-            showToast("Saved");
+        // --- FULL CRUD: DELETE ---
+        function del(path) {
+            if(confirm("Confirm Delete?")) {
+                db.ref(path).remove().then(() => showToast("Deleted!"));
+            }
         }
-        function loadCategories() {
-            db.ref('categories').on('value', snap => {
-                const list = document.getElementById('cat-list'); list.innerHTML = '';
-                categories = [];
+
+        // --- TOKEN FACTORY PRO ---
+        function generateTokens() {
+            const q = document.getElementById('tk-qty').value, d = document.getElementById('tk-dur').value, u = document.getElementById('tk-unit').value;
+            for(let i=0; i<q; i++) {
+                const code = 'TK-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                db.ref('tokens/'+code).set({ status:'unused', durationValue: d, durationUnit: u, usedBy: '' });
+            }
+            showToast("Tokens Ready");
+        }
+        function loadTokens() {
+            db.ref('tokens').on('value', snap => {
+                const list = document.getElementById('token-list'); list.innerHTML = '';
                 snap.forEach(c => {
-                    const d = c.val(); categories.push({id: c.key, ...d});
-                    list.innerHTML += `<div class="item-row"><b>${d.name} (${d.type})</b><div class="action-btns"><i class="fas fa-edit fa-edit" onclick="editCat('${c.key}')"></i><i class="fas fa-trash fa-trash" onclick="del('categories/${c.key}')"></i></div></div>`;
-                });
-                updateCatDropdown();
-            });
-        }
-        function editCat(id) {
-            db.ref('categories/'+id).once('value', s => {
-                const d = s.val(); document.getElementById('cat-id').value = id;
-                document.getElementById('cat-name').value = d.name; document.getElementById('cat-type').value = d.type;
-            });
-        }
-
-        function saveContent() {
-            const id = document.getElementById('content-id').value;
-            const path = document.getElementById('content-db').value;
-            const data = { name: document.getElementById('content-name').value, streamURL: document.getElementById('content-url').value, movieURL: document.getElementById('content-url').value, logo: document.getElementById('content-logo').value, posterURL: document.getElementById('content-logo').value, category: document.getElementById('content-cat-select').value, playerType: document.getElementById('content-player').value, licenseURL: document.getElementById('content-license').value };
-            if(id) db.ref(path+'/'+id).update(data); else db.ref(path).push(data);
-            document.getElementById('content-id').value = ""; showToast("Saved");
-        }
-        function loadContentList() {
-            const list = document.getElementById('content-list'); list.innerHTML = '';
-            ['channels', 'movies'].forEach(p => {
-                db.ref(p).on('value', snap => {
-                    snap.forEach(c => {
-                        list.innerHTML += `<div class="item-row"><div class="item-info"><b>${c.val().name}</b><span>Type: ${p}</span></div><div class="action-btns"><i class="fas fa-edit" onclick="editContent('${p}','${c.key}')"></i><i class="fas fa-trash" onclick="del('${p}/${c.key}')"></i></div></div>`;
-                    });
+                    const d = c.val();
+                    list.innerHTML += `<div class="item-row"><div><b>${c.key}</b><span style="font-size:9px; color:${d.status==='used'?'#444':'lime'}">${d.status.toUpperCase()} ${d.usedBy?'('+d.usedBy+')':''}</span></div><div class="action-btns"><i class="fas fa-copy" onclick="copyTxt('${c.key}')"></i><i class="fas fa-trash" onclick="del('tokens/${c.key}')"></i></div></div>`;
                 });
             });
         }
-        function editContent(path, id) {
-            db.ref(path+'/'+id).once('value', s => {
-                const d = s.val(); document.getElementById('content-id').value = id; document.getElementById('content-db').value = path;
-                document.getElementById('content-name').value = d.name; document.getElementById('content-url').value = d.streamURL || d.movieURL;
-                document.getElementById('content-logo').value = d.logo || d.posterURL; document.getElementById('content-cat-select').value = d.category || "";
-            });
-        }
 
+        // --- ADS MANAGER ---
         function saveAd() {
             const id = document.getElementById('ad-id').value;
-            const data = { header: document.getElementById('ad-header').value, url: document.getElementById('ad-url').value, platform: document.getElementById('ad-platform').value, link: document.getElementById('ad-link').value, duration: document.getElementById('ad-sec').value };
+            const socialLinks = {
+                whatsapp: document.getElementById('ad-link-whatsapp').value,
+                telegram: document.getElementById('ad-link-telegram').value,
+                globe: document.getElementById('ad-link-globe').value,
+                youtube: document.getElementById('ad-link-youtube').value
+            };
+            const data = { header: document.getElementById('ad-header').value, url: document.getElementById('ad-url').value, duration: document.getElementById('ad-sec').value, sponsorLinks: socialLinks };
             if(id) db.ref('ads/'+id).update(data); else db.ref('ads').push(data);
-            document.getElementById('ad-id').value = ""; showToast("Saved");
+            showToast("Ad Saved");
         }
         function loadAdsList() {
             db.ref('ads').on('value', snap => {
@@ -322,79 +333,118 @@
             db.ref('ads/'+id).once('value', s => {
                 const d = s.val(); document.getElementById('ad-id').value = id;
                 document.getElementById('ad-header').value = d.header; document.getElementById('ad-url').value = d.url;
-                document.getElementById('ad-platform').value = d.platform; document.getElementById('ad-link').value = d.link;
                 document.getElementById('ad-sec').value = d.duration;
+                if(d.sponsorLinks) {
+                    document.getElementById('ad-link-whatsapp').value = d.sponsorLinks.whatsapp || "";
+                    document.getElementById('ad-link-telegram').value = d.sponsorLinks.telegram || "";
+                    document.getElementById('ad-link-globe').value = d.sponsorLinks.globe || "";
+                }
             });
         }
 
+        // --- USERS ---
+        function loadUsersList() {
+            const list = document.getElementById('user-list'); list.innerHTML = '';
+            Object.entries(allUsers).forEach(([id, u]) => {
+                list.innerHTML += `<div class="item-row"><div class="item-info"><b>${u.name}</b><span>${u.email}</span><span>Pass: ${u.secretPassword || 'N/A'}</span></div><button class="btn btn-d" style="width:60px; padding:4px" onclick="resetHWID('${id}')">RESET</button></div>`;
+            });
+        }
+        function resetHWID(id) { db.ref('users/'+id).update({hwid:""}); showToast("Device Reset"); }
+
+        // --- SUPPORT CHAT ---
+        function loadSupportList() {
+            db.ref('supportChats').on('value', snap => {
+                const list = document.getElementById('chat-list'); list.innerHTML = '';
+                let unreadCount = 0;
+                snap.forEach(child => {
+                    const uid = child.key;
+                    const user = allUsers[uid] || { name: "User", email: "No Email" };
+                    const msgs = Object.values(child.val());
+                    const isNew = msgs[msgs.length-1].uid !== 'admin';
+                    if(isNew) unreadCount++;
+                    list.innerHTML += `<div class="item-row chat-item ${isNew?'unread':''}" onclick="openChat('${uid}')"><div class="item-info"><b>${user.name}</b><span>${user.email}</span></div><i class="fas fa-chevron-right"></i></div>`;
+                });
+                document.getElementById('chat-alert').style.display = unreadCount > 0 ? 'block' : 'none';
+            });
+        }
+        function openChat(uid) {
+            window.activeChatId = uid; const user = allUsers[uid] || { name: "User", email: "" };
+            document.getElementById('chat-window').style.display = 'block';
+            document.getElementById('chat-user-name').innerText = user.name;
+            document.getElementById('chat-user-email').innerText = user.email;
+            db.ref('supportChats/' + uid).on('value', snap => {
+                const box = document.getElementById('chat-msgs'); box.innerHTML = '';
+                snap.forEach(m => {
+                    const isAdmin = m.val().uid === 'admin';
+                    box.innerHTML += `<div style="padding:6px; border-radius:10px; margin-bottom:5px; align-self:${isAdmin?'flex-end':'flex-start'}; background:${isAdmin?'var(--primary)':'#222'}; color:white; font-size:10px;">${m.val().text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+        function sendReply() {
+            const t = document.getElementById('reply-input').value; if(!t) return;
+            db.ref('supportChats/' + window.activeChatId).push({ name: "Admin", uid: "admin", text: t, timestamp: Date.now() });
+            document.getElementById('reply-input').value = '';
+        }
+
+        // --- CATEGORIES & CONTENT ---
+        function saveCategory() {
+            const id = document.getElementById('cat-id').value;
+            const data = { name: document.getElementById('cat-name').value, type: document.getElementById('cat-type').value };
+            if(id) db.ref('categories/'+id).update(data); else db.ref('categories').push(data);
+            showToast("Saved");
+        }
+        function loadCategories() {
+            db.ref('categories').on('value', snap => {
+                categories = []; const list = document.getElementById('cat-list'); list.innerHTML = '';
+                snap.forEach(c => { categories.push({id: c.key, ...c.val()}); list.innerHTML += `<div class="item-row"><b>${c.val().name}</b><div class="action-btns"><i class="fas fa-trash" onclick="del('categories/${c.key}')"></i></div></div>`; });
+                updateCatDropdown();
+            });
+        }
+        function saveContent() {
+            const id = document.getElementById('content-id').value;
+            const path = document.getElementById('content-db').value;
+            const data = { name: document.getElementById('content-name').value, streamURL: document.getElementById('content-url').value, movieURL: document.getElementById('content-url').value, logo: document.getElementById('content-logo').value, playerType: document.getElementById('content-player').value, licenseURL: document.getElementById('content-license').value, category: document.getElementById('content-cat-select').value };
+            if(id) db.ref(path+'/'+id).update(data); else db.ref(path).push(data);
+            showToast("Saved");
+        }
+        function loadContentList() {
+            const list = document.getElementById('content-list'); list.innerHTML = '';
+            ['channels', 'movies'].forEach(p => { db.ref(p).on('value', snap => { snap.forEach(c => { list.innerHTML += `<div class="item-row"><div class="item-info"><b>${c.val().name}</b><span>${p}</span></div><i class="fas fa-trash" onclick="del('${p}/${c.key}')"></i></div>`; }); }); });
+        }
+
+        // --- LIBRARY ---
+        function addEpField(t="", c="") {
+            const div = document.createElement('div'); div.className = 'ep-box';
+            div.innerHTML = `<input class="ep-t" placeholder="Part Title" value="${t}"><textarea class="ep-c" rows="2" placeholder="Text">${c}</textarea><i class="fas fa-times" style="position:absolute; top:5px; right:5px; color:red" onclick="this.parentElement.remove()"></i>`;
+            document.getElementById('ep-area').appendChild(div);
+        }
         function saveLibrary() {
             const id = document.getElementById('lib-id').value;
             const eps = []; document.querySelectorAll('.ep-box').forEach(b => { eps.push({ partTitle: b.querySelector('.ep-t').value, content: b.querySelector('.ep-c').value }); });
-            const data = { title: document.getElementById('lib-title').value, author: document.getElementById('lib-author').value, dropImage: document.getElementById('lib-drop').value, description: document.getElementById('lib-desc').value, episodes: eps };
+            const data = { title: document.getElementById('lib-title').value, author: document.getElementById('lib-author').value, dropImage: document.getElementById('lib-drop').value, description: document.getElementById('lib-desc').value, episodes: eps, category: document.getElementById('lib-cat').value };
             if(id) db.ref('library/'+id).update(data); else db.ref('library').push(data);
-            document.getElementById('lib-id').value = ""; document.getElementById('ep-area').innerHTML = ""; showToast("Saved");
+            showToast("Published");
         }
         function loadLibList() {
             db.ref('library').on('value', snap => {
                 const list = document.getElementById('lib-list'); list.innerHTML = '';
-                snap.forEach(c => {
-                    list.innerHTML += `<div class="item-row"><b>${c.val().title}</b><div class="action-btns"><i class="fas fa-edit" onclick="editLib('${c.key}')"></i><i class="fas fa-trash" onclick="del('library/${c.key}')"></i></div></div>`;
-                });
-            });
-        }
-        function editLib(id) {
-            db.ref('library/'+id).once('value', s => {
-                const d = s.val(); document.getElementById('lib-id').value = id;
-                document.getElementById('lib-title').value = d.title; document.getElementById('lib-author').value = d.author;
-                document.getElementById('lib-drop').value = d.dropImage; document.getElementById('lib-desc').value = d.description;
-                document.getElementById('ep-area').innerHTML = ""; d.episodes.forEach(e => addEpField(e.partTitle, e.content));
+                snap.forEach(c => { list.innerHTML += `<div class="item-row"><b>${c.val().title}</b><div class="action-btns"><i class="fas fa-trash" onclick="del('library/${c.key}')"></i></div></div>`; });
             });
         }
 
-        // --- HELPERS ---
-        function del(p) { if(confirm("Confirm Delete?")) db.ref(p).remove().then(() => showToast("Deleted")); }
+        // --- UTILS ---
         function showToast(m) { const t = document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
-        function addEpField(t="", c="") {
-            const div = document.createElement('div'); div.className = 'ep-box';
-            div.innerHTML = `<input class="ep-t" placeholder="Title" value="${t}"><textarea class="ep-c" rows="2" placeholder="Text">${c}</textarea><i class="fas fa-times" style="position:absolute; top:5px; right:5px; color:red" onclick="this.parentElement.remove()"></i>`;
-            document.getElementById('ep-area').appendChild(div);
-        }
+        function copyTxt(t) { navigator.clipboard.writeText(t); showToast("Copied"); }
+        function loadStats() { document.getElementById('stat-users').innerText = Object.keys(allUsers).length; }
+        function closeChat() { document.getElementById('chat-window').style.display='none'; }
+        function saveSettings() { db.ref('settings/adminContactNumber').set(document.getElementById('set-wa').value).then(()=>showToast("Updated")); }
+        function loadSettings() { db.ref('settings/adminContactNumber').once('value', s => { document.getElementById('set-wa').value = s.val() || ""; }); }
         function updateCatDropdown() {
             const type = document.getElementById('content-db').value;
             const sel = document.getElementById('content-cat-select'); sel.innerHTML = '<option value="">None</option>';
             categories.filter(c => c.type === type).forEach(c => { sel.innerHTML += `<option value="${c.name}">${c.name}</option>`; });
         }
-        function loadUsersList() {
-            const list = document.getElementById('user-list'); list.innerHTML = '';
-            Object.entries(allUsers).forEach(([id, u]) => {
-                list.innerHTML += `<div class="item-row"><div class="item-info"><b>${u.name}</b><span>${u.email}</span><span>Pass: ${u.secretPassword || 'N/A'}</span></div><i class="fas fa-trash" onclick="del('users/${id}')"></i></div>`;
-            });
-        }
-        function loadSupportList() {
-            db.ref('supportChats').on('value', snap => {
-                const list = document.getElementById('chat-list'); list.innerHTML = ''; let unread = 0;
-                snap.forEach(c => {
-                    const last = Object.values(c.val()).pop(); if(last.uid !== 'admin') unread++;
-                    list.innerHTML += `<div class="item-row" onclick="openChat('${c.key}')"><b>User: ${c.key.substring(0,8)}</b><i class="fas fa-comment"></i></div>`;
-                });
-                document.getElementById('chat-alert').style.display = unread > 0 ? 'block' : 'none';
-            });
-        }
-        function openChat(id) {
-            window.activeChatId = id; document.getElementById('chat-window').style.display='block';
-            db.ref('supportChats/'+id).on('value', snap => {
-                const box = document.getElementById('chat-msgs'); box.innerHTML = '';
-                snap.forEach(m => { const d = m.val(); box.innerHTML += `<div style="padding:6px; border-radius:8px; margin-bottom:4px; align-self:${d.uid==='admin'?'flex-end':'flex-start'}; background:${d.uid==='admin'?'var(--primary)':'#222'}">${d.text}</div>`; });
-                box.scrollTop = box.scrollHeight;
-            });
-        }
-        function sendReply() { const t = document.getElementById('reply-input').value; if(!t) return; db.ref('supportChats/'+window.activeChatId).push({ name:"Admin", uid:"admin", text:t, timestamp:Date.now() }); document.getElementById('reply-input').value = ''; }
-        function closeChat() { document.getElementById('chat-window').style.display='none'; }
-        function saveSettings() { db.ref('settings/adminContactNumber').set(document.getElementById('set-wa').value).then(() => showToast("Updated")); }
-        function loadSettings() { db.ref('settings/adminContactNumber').once('value', s => { document.getElementById('set-wa').value = s.val() || ""; }); }
-        function generateTokens() { /* Existing logic */ }
-        function loadTokens() { /* Existing logic */ }
-        function loadStats() { document.getElementById('stat-users').innerText = Object.keys(allUsers).length; }
     </script>
 </body>
 </html>
