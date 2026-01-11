@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY ADMIN - COMPACT PRO</title>
+    <title>STANY ADMIN - ULTIMATE COMMAND</title>
     
     <!-- FONTS & ICONS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -24,152 +25,162 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; outline: none; }
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; font-size: 13px; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; font-size: 12px; display: flex; }
 
-        /* HEADER */
-        .top-bar { height: 50px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        .brand { font-family: 'Orbitron'; font-size: 13px; color: var(--primary); letter-spacing: 1px; }
+        /* MINI SIDEBAR */
+        .sidebar { width: 55px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; flex-shrink: 0; }
+        .nav-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #444; cursor: pointer; transition: 0.3s; font-size: 16px; position: relative; }
+        .nav-icon.active { background: var(--primary); color: white; }
+        .nav-dot { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; border: 2px solid var(--card); display: none; }
 
-        /* DASHBOARD GRID */
-        #homeView { flex: 1; overflow-y: auto; padding: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; align-content: start; }
-        .menu-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .menu-card:active { transform: scale(0.95); background: #111; }
-        .menu-icon { font-size: 1.5em; margin-bottom: 5px; color: var(--primary); }
-        .menu-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* MAIN AREA */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-bar { height: 45px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .brand { font-family: 'Orbitron'; font-size: 11px; color: var(--primary); letter-spacing: 1px; }
 
-        /* PAGES */
-        .page-view { display: none; flex: 1; overflow-y: auto; padding: 12px; background: var(--bg); height: calc(100vh - 50px); }
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        h2 { font-size: 14px; color: var(--primary); text-transform: uppercase; font-weight: 800; }
+        .page-view { display: none; flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 80px; }
+        .page-view.active { display: block; }
+        h2 { font-size: 13px; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; font-weight: 800; border-left: 3px solid var(--primary); padding-left: 8px; }
 
-        /* FORM COMPACT */
-        .app-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 20px; margin-bottom: 15px; }
-        label { display: block; font-size: 10px; color: var(--gray); font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 10px; background: #000; border: 1px solid #222; color: white; border-radius: 10px; margin-bottom: 10px; font-size: 12px; }
-        .btn { padding: 10px 15px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; transition: 0.2s; text-transform: uppercase; }
+        /* CARDS & ROWS */
+        .app-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 15px; margin-bottom: 12px; }
+        .item-row { background: #050505; border: 1px solid #111; padding: 10px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info b { font-size: 11px; color: var(--primary); display: block; }
+        .item-info span { font-size: 9px; color: #555; display: block; }
+        
+        /* CHAT INBOX STYLE */
+        .chat-item { border-left: 3px solid transparent; cursor: pointer; transition: 0.2s; }
+        .chat-item.unread { border-left: 3px solid var(--primary); background: #110000; }
+        .chat-item b { font-size: 12px; color: #fff; }
+        .chat-item small { color: var(--primary); font-weight: 600; font-size: 9px; }
+
+        /* FORMS */
+        label { display: block; font-size: 9px; color: var(--gray); font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 8px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 11px; }
+        .btn { padding: 8px 12px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; }
         .btn-p { background: var(--primary); color: white; width: 100%; }
-        .btn-d { background: #222; color: white; width: 100%; margin-top: 5px; }
+        .btn-d { background: #1a1a1a; color: white; }
 
-        /* ITEM ROWS (COMPACT) */
-        .item-row { background: #050505; border: 1px solid #111; padding: 10px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .info-col b { font-size: 12px; color: var(--primary); font-family: monospace; }
-        .info-col span { display: block; font-size: 10px; color: #555; margin-top: 2px; }
-        .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; }
+        /* ACTION ICONS */
+        .action-btns i { cursor: pointer; padding: 7px; border-radius: 6px; background: #111; font-size: 11px; margin-left: 4px; }
+        .fa-trash { color: #ff3b30; }
+        .fa-edit { color: #007aff; }
 
-        .back-btn { font-size: 18px; color: white; cursor: pointer; }
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: bold; display: none; z-index: 10000; }
-
-        .ep-box { background: #000; padding: 10px; border-radius: 10px; border-left: 2px solid var(--primary); margin-bottom: 10px; }
-        ::-webkit-scrollbar { width: 0px; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 8px 20px; border-radius: 20px; font-size: 10px; display: none; z-index: 20000; }
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
 
-    <!-- AUTH -->
-    <div id="authOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
-        <div class="app-card" style="width:280px; text-align:center;">
-            <h2>LOGIN</h2>
-            <input type="email" id="adminEmail" placeholder="Email">
-            <input type="password" id="adminPass" placeholder="Password">
-            <button class="btn btn-p" onclick="login()">ENTER</button>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="nav-icon active" onclick="switchNav('home', this)"><i class="fas fa-home"></i></div>
+        <div class="nav-icon" onclick="switchNav('users', this)"><i class="fas fa-users"></i></div>
+        <div class="nav-icon" onclick="switchNav('content', this)"><i class="fas fa-play"></i></div>
+        <div class="nav-icon" onclick="switchNav('ads', this)"><i class="fas fa-ad"></i></div>
+        <div class="nav-icon" onclick="switchNav('library', this)"><i class="fas fa-book"></i></div>
+        <div class="nav-icon" onclick="switchNav('chat', this)">
+            <i class="fas fa-comment-dots"></i>
+            <div class="nav-dot" id="chat-alert"></div>
         </div>
+        <div class="nav-icon" onclick="switchNav('settings', this)"><i class="fas fa-cog"></i></div>
     </div>
 
-    <!-- HEADER -->
-    <div class="top-bar">
-        <i class="fas fa-arrow-left back-btn" id="backBtn" style="visibility:hidden;" onclick="goHome()"></i>
-        <div class="brand" id="pageTitle">STANY ADMIN</div>
-        <i class="fas fa-power-off" onclick="auth.signOut()" style="color:var(--primary); font-size: 16px;"></i>
-    </div>
-
-    <!-- HOME DASHBOARD -->
-    <div id="homeView">
-        <div class="menu-card" onclick="openPage('ads')"><i class="fas fa-ad menu-icon"></i><div class="menu-title">Ads Pool</div></div>
-        <div class="menu-card" onclick="openPage('tokens')"><i class="fas fa-key menu-icon"></i><div class="menu-title">Tokens</div></div>
-        <div class="menu-card" onclick="openPage('library')"><i class="fas fa-book menu-icon"></i><div class="menu-title">Library</div></div>
-        <div class="menu-card" onclick="openPage('content')"><i class="fas fa-film menu-icon"></i><div class="menu-title">Content</div></div>
-        <div class="menu-card" onclick="openPage('chat')"><i class="fas fa-comments menu-icon"></i><div class="menu-title">Support</div></div>
-        <div class="menu-card" onclick="openPage('users')"><i class="fas fa-users-cog menu-icon"></i><div class="menu-title">HWID Lock</div></div>
-    </div>
-
-    <!-- 1. ADS MANAGER -->
-    <div id="ads" class="page-view">
-        <div class="app-card">
-            <select id="ad-type" class="select-modern"><option value="image">Image</option><option value="video">Video</option></select>
-            <input id="ad-header" placeholder="Header Text">
-            <input id="ad-url" placeholder="Media URL">
-            <input id="ad-duration" type="number" placeholder="Duration (Sec)">
-            <input id="ad-link-wa" placeholder="WhatsApp Link">
-            <input id="ad-link-tg" placeholder="Telegram Link">
-            <button class="btn btn-p" onclick="saveAd()">Save to Pool</button>
+    <div class="main">
+        <div class="top-bar">
+            <div class="brand">STANY ADMIN SUPREME</div>
+            <i class="fas fa-power-off" onclick="auth.signOut()" style="color:var(--primary);"></i>
         </div>
-        <div id="ads-list"></div>
-    </div>
 
-    <!-- 2. TOKENS -->
-    <div id="tokens" class="page-view">
-        <div class="app-card">
-            <div style="display:flex; gap:5px;">
-                <input id="tk-value" type="number" placeholder="Value" style="width:70px">
-                <select id="tk-unit" style="flex:1"><option value="hours">Hours</option><option value="days">Days</option></select>
-                <input id="tk-count" type="number" placeholder="Qty" style="width:70px">
-            </div>
-            <button class="btn btn-p" onclick="generateTokens()">Generate Tokens</button>
-        </div>
-        <div id="tk-list"></div>
-    </div>
-
-    <!-- 3. LIBRARY -->
-    <div id="library" class="page-view">
-        <div class="app-card">
-            <select id="lib-cat"><option value="simulizi">Simulizi</option><option value="tech">Tech Update</option></select>
-            <input id="lib-title" placeholder="Title">
-            <input id="lib-author" placeholder="Author">
-            <textarea id="lib-desc" placeholder="Summary..." rows="2"></textarea>
-            <div id="ep-container">
-                <div class="ep-row">
-                    <input class="ep-title" placeholder="Part 1 Title">
-                    <textarea class="ep-content" rows="3" placeholder="Content..."></textarea>
+        <!-- DASHBOARD -->
+        <div id="view-home" class="page-view active">
+            <h2>DASHBOARD</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="app-card" style="text-align:center;">
+                    <label>Total Users</label>
+                    <div id="stat-users" style="font-size:18px; font-weight:900;">0</div>
+                </div>
+                <div class="app-card" style="text-align:center;">
+                    <label>Premium</label>
+                    <div id="stat-premium" style="font-size:18px; font-weight:900; color:gold;">0</div>
                 </div>
             </div>
-            <button class="btn btn-d" onclick="addEpField()">+ Next Part</button>
-            <button class="btn btn-p" style="margin-top:10px" onclick="saveLibrary()">Publish</button>
         </div>
-    </div>
 
-    <!-- 4. CONTENT -->
-    <div id="content" class="page-view">
-        <div class="app-card">
-            <select id="ch-type"><option value="movies">Movies</option><option value="adultContent">Adult 18+</option><option value="channels">Channels</option></select>
-            <input id="ch-name" placeholder="Title">
-            <input id="ch-url" placeholder="URL">
-            <input id="ch-logo" placeholder="Logo/Poster URL">
-            <select id="ch-player"><option value="internal">Standard</option><option value="drm">DRM Player</option></select>
-            <input id="ch-license" placeholder="License URL">
-            <input id="ch-token" placeholder="Token ID">
-            <button class="btn btn-p" onclick="saveContent()">Save</button>
+        <!-- USER TRACKER -->
+        <div id="view-users" class="page-view">
+            <h2>USER MANAGEMENT</h2>
+            <div id="user-list"></div>
         </div>
-        <div id="content-list"></div>
-    </div>
 
-    <!-- 5. CHAT -->
-    <div id="chat" class="page-view">
-        <div id="chat-list"></div>
-        <div id="reply-area" style="display:none;" class="app-card">
-            <textarea id="reply-text" rows="3" placeholder="Reply..."></textarea>
-            <button class="btn btn-p" onclick="sendReply()">Send</button>
+        <!-- CONTENT CRUD -->
+        <div id="view-content" class="page-view">
+            <div class="app-card">
+                <h3 id="content-form-title" style="font-size:11px; margin-bottom:8px;">ADD CONTENT</h3>
+                <input type="hidden" id="content-id">
+                <select id="content-db"><option value="channels">Live Channel</option><option value="movies">Movies</option><option value="adultContent">Adult 18+</option></select>
+                <input id="content-name" placeholder="Title">
+                <input id="content-url" placeholder="URL">
+                <input id="content-logo" placeholder="Poster URL">
+                <select id="content-player"><option value="internal">Standard</option><option value="drm">DRM Pro</option></select>
+                <input id="content-license" placeholder="License URL">
+                <button class="btn btn-p" onclick="saveContent()">SAVE DATA</button>
+            </div>
+            <div id="content-list"></div>
         </div>
-    </div>
 
-    <!-- 6. USERS -->
-    <div id="users" class="page-view">
-        <div id="user-list"></div>
+        <!-- ADS & SPONSORS -->
+        <div id="view-ads" class="page-view">
+            <div class="app-card">
+                <h3>ADS POOL</h3>
+                <input type="hidden" id="ad-id">
+                <input id="ad-header" placeholder="Header Text">
+                <input id="ad-url" placeholder="Media URL">
+                <label>SPONSOR PLATFORM</label>
+                <select id="ad-platform">
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="globe">Browser</option>
+                </select>
+                <input id="ad-link" placeholder="Social URL">
+                <button class="btn btn-p" onclick="saveAd()">SAVE AD</button>
+            </div>
+            <div id="ads-list"></div>
+        </div>
+
+        <!-- SUPPORT CHAT (UNREAD TRACKER) -->
+        <div id="view-chat" class="page-view">
+            <h2>INBOX (PRIVATE DM)</h2>
+            <div id="chat-list"></div>
+            
+            <div id="chat-window" style="display:none;" class="app-card">
+                <h4 id="chat-user-name" style="color:var(--primary);">...</h4>
+                <p id="chat-user-email" style="font-size:9px; color:#555; margin-bottom:10px;"></p>
+                <div id="chat-msgs" style="height:200px; overflow-y:auto; display:flex; flex-direction:column; margin-bottom:10px; padding:5px; background:#000;"></div>
+                <div style="display:flex; gap:5px;">
+                    <input id="reply-input" placeholder="Reply..." style="margin:0">
+                    <button class="btn btn-p" style="width:60px" onclick="sendReply()">SEND</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS (WA NUMBER) -->
+        <div id="view-settings" class="page-view">
+            <h2>APP SETTINGS</h2>
+            <div class="app-card">
+                <label>WhatsApp Support Number</label>
+                <input id="set-wa" placeholder="e.g. 255712345678">
+                <button class="btn btn-p" onclick="saveSettings()">UPDATE NUMBER</button>
+            </div>
+        </div>
+
     </div>
 
     <div id="toast">Saved!</div>
 
     <script>
-        // CONFIG
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDiexD5WK9GLhQldr6zNmC8iYWc4em5eyM",
             authDomain: "stany-min-tv.firebaseapp.com",
@@ -182,104 +193,140 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(), auth = firebase.auth();
 
+        let allUsers = {};
+
         auth.onAuthStateChanged(u => {
             if(u) { document.getElementById('authOverlay').style.display='none'; init(); }
             else { document.getElementById('authOverlay').style.display='flex'; }
         });
 
         function login() { auth.signInWithEmailAndPassword(document.getElementById('adminEmail').value, document.getElementById('adminPass').value); }
-        function init() { loadAds(); loadTokens(); loadUsers(); loadSupportList(); loadList('movies'); loadList('adultContent'); loadList('channels'); }
 
-        // --- TOKEN LOGIC (WITH TRACKING & COPY) ---
-        function generateTokens() {
-            const v = document.getElementById('tk-value').value, u = document.getElementById('tk-unit').value, c = document.getElementById('tk-count').value;
-            for(let i=0; i<c; i++) {
-                const tk = 'TK-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-                db.ref('tokens/' + tk).set({ status: 'unused', durationValue: v, durationUnit: u, usedBy: '' });
-            }
-            showToast("Created!");
-        }
-
-        function loadTokens() {
-            db.ref('tokens').on('value', snap => {
-                const list = document.getElementById('tk-list'); list.innerHTML = '';
-                snap.forEach(c => {
-                    const d = c.val();
-                    const statusColor = d.status === 'used' ? '#444' : 'lime';
-                    list.innerHTML += `
-                    <div class="item-row">
-                        <div class="info-col">
-                            <b>${c.key}</b>
-                            <span>${d.status === 'used' ? 'User: ' + d.usedBy : d.durationValue + ' ' + d.durationUnit}</span>
-                        </div>
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <i class="fas fa-copy" style="color:var(--gray)" onclick="copyTxt('${c.key}')"></i>
-                            <i class="fas fa-trash" style="color:var(--danger)" onclick="del('tokens/${c.key}')"></i>
-                        </div>
-                    </div>`;
-                });
-            });
-        }
-
-        // --- NAVIGATION ---
-        function openPage(id) {
-            document.getElementById('homeView').style.display='none';
-            document.querySelectorAll('.page-view').forEach(p=>p.style.display='none');
-            document.getElementById(id).style.display='block';
-            document.getElementById('backBtn').style.visibility='visible';
-            document.getElementById('pageTitle').innerText = id.toUpperCase();
-        }
-        function goHome() {
-            document.querySelectorAll('.page-view').forEach(p=>p.style.display='none');
-            document.getElementById('homeView').style.display='grid';
-            document.getElementById('backBtn').style.visibility='hidden';
-            document.getElementById('pageTitle').innerText = 'STANY ADMIN';
-        }
-
-        // --- OTHER LOGIC ---
-        function saveAd() {
-            const ad = { type: document.getElementById('ad-type').value, header: document.getElementById('ad-header').value, url: document.getElementById('ad-url').value, duration: document.getElementById('ad-duration').value, socialLinks: { whatsapp: document.getElementById('ad-link-wa').value, telegram: document.getElementById('ad-link-tg').value } };
-            db.ref('ads').push(ad).then(() => showToast("Ad Saved!"));
-        }
-        function loadAds() {
-            db.ref('ads').on('value', snap => {
-                const list = document.getElementById('ads-list'); list.innerHTML = '';
-                snap.forEach(c => { list.innerHTML += `<div class="item-row"><span>${c.val().header}</span><i class="fas fa-trash" onclick="del('ads/${c.key}')"></i></div>`; });
-            });
-        }
-        function addEpField() {
-            const div = document.createElement('div'); div.className = 'ep-row';
-            div.innerHTML = `<input class="ep-title" placeholder="Title"><textarea class="ep-content" rows="3" placeholder="Text"></textarea>`;
-            document.getElementById('ep-container').appendChild(div);
-        }
-        function saveLibrary() {
-            const eps = [];
-            document.querySelectorAll('.ep-row').forEach(row => { eps.push({ partTitle: row.querySelector('.ep-title').value, content: row.querySelector('.ep-content').value }); });
-            db.ref('library').push({ category: document.getElementById('lib-cat').value, title: document.getElementById('lib-title').value, author: document.getElementById('lib-author').value, description: document.getElementById('lib-desc').value, episodes: eps }).then(()=>showToast("Book Published!"));
-        }
-        function saveContent() {
-            const type = document.getElementById('ch-type').value;
-            db.ref(type).push({ name: document.getElementById('ch-name').value, title: document.getElementById('ch-name').value, streamURL: document.getElementById('ch-url').value, movieURL: document.getElementById('ch-url').value, logo: document.getElementById('ch-logo').value, posterURL: document.getElementById('ch-logo').value, playerType: document.getElementById('ch-player').value, licenseURL: document.getElementById('ch-license').value, tokenID: document.getElementById('ch-token').value }).then(() => showToast("Saved!"));
-        }
-        function loadUsers() {
+        function init() {
+            // Pre-load users to match DMs with Names
             db.ref('users').on('value', snap => {
-                const list = document.getElementById('user-list'); list.innerHTML = '';
-                snap.forEach(c => { list.innerHTML += `<div class="item-row"><div><b>${c.val().name}</b><br><small>${c.val().email}</small></div><button class="btn btn-d" style="width:70px; padding:5px" onclick="resetHWID('${c.key}')">RESET</button></div>`; });
+                allUsers = snap.val() || {};
+                loadStats(); loadUsersList(); loadSupportList();
             });
+            loadContentList(); loadAdsList(); loadSettings();
         }
-        function resetHWID(uid) { db.ref('users/'+uid).update({ hwid: "" }).then(() => showToast("Reset Done!")); }
-        function loadList(path) { /* Minimal list loader */ }
+
+        function switchNav(page, el) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('view-' + page).classList.add('active');
+            document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // --- SUPPORT CHAT LOGIC ---
         function loadSupportList() {
             db.ref('supportChats').on('value', snap => {
                 const list = document.getElementById('chat-list'); list.innerHTML = '';
-                snap.forEach(c => { list.innerHTML += `<div class="item-row" onclick="openReply('${c.key}')"><span>Chat from ${c.key.substring(0,6)}</span><i class="fas fa-chevron-right"></i></div>`; });
+                let unreadCount = 0;
+
+                snap.forEach(child => {
+                    const uid = child.key;
+                    const msgs = Object.values(child.val());
+                    const lastMsg = msgs[msgs.length - 1];
+                    const user = allUsers[uid] || { name: "Unknown", email: "No Email" };
+                    
+                    const isUnread = lastMsg.uid !== 'admin';
+                    if(isUnread) unreadCount++;
+
+                    list.innerHTML += `
+                    <div class="item-row chat-item ${isUnread?'unread':''}" onclick="openChat('${uid}')">
+                        <div class="item-info">
+                            <b>${user.name} ${isUnread?'<small>(NEW)</small>':''}</b>
+                            <span>${user.email}</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#333"></i>
+                    </div>`;
+                });
+
+                document.getElementById('chat-alert').style.display = unreadCount > 0 ? 'block' : 'none';
             });
         }
-        function openReply(uid) { window.selectedChat = uid; document.getElementById('reply-area').style.display='block'; }
-        function sendReply() { const t = document.getElementById('reply-text').value; db.ref('supportChats/'+window.selectedChat).push({ name:"Admin", uid:"admin", text:t, timestamp:Date.now() }).then(()=>showToast("Replied!")); }
-        function del(p) { if(confirm("Del?")) db.ref(p).remove(); }
-        function copyTxt(t) { navigator.clipboard.writeText(t); showToast("Copied!"); }
+
+        function openChat(uid) {
+            window.activeChatId = uid;
+            const user = allUsers[uid] || { name: "Unknown", email: "No Email" };
+            document.getElementById('chat-window').style.display = 'block';
+            document.getElementById('chat-list').style.display = 'none';
+            document.getElementById('chat-user-name').innerText = user.name;
+            document.getElementById('chat-user-email').innerText = user.email;
+
+            db.ref('supportChats/' + uid).on('value', snap => {
+                const box = document.getElementById('chat-msgs'); box.innerHTML = '';
+                snap.forEach(m => {
+                    const d = m.val();
+                    const isAdmin = d.uid === 'admin';
+                    box.innerHTML += `<div style="padding:6px 10px; border-radius:10px; margin-bottom:5px; font-size:11px; align-self:${isAdmin?'flex-end':'flex-start'}; background:${isAdmin?'var(--primary)':'#222'}; color:white; max-width:85%">${d.text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        function sendReply() {
+            const t = document.getElementById('reply-input').value;
+            if(!t) return;
+            db.ref('supportChats/' + window.activeChatId).push({
+                name: "Admin", uid: "admin", text: t, timestamp: Date.now()
+            });
+            document.getElementById('reply-input').value = '';
+        }
+
+        function closeChat() {
+            document.getElementById('chat-window').style.display = 'none';
+            document.getElementById('chat-list').style.display = 'block';
+        }
+
+        // --- SETTINGS (WA NUMBER) ---
+        function loadSettings() {
+            db.ref('settings/adminContactNumber').once('value', s => {
+                document.getElementById('set-wa').value = s.val() || "";
+            });
+        }
+        function saveSettings() {
+            const num = document.getElementById('set-wa').value;
+            db.ref('settings/adminContactNumber').set(num).then(() => showToast("WA Number Updated"));
+        }
+
+        // --- USERS ---
+        function loadUsersList() {
+            const list = document.getElementById('user-list'); list.innerHTML = '';
+            Object.entries(allUsers).forEach(([id, u]) => {
+                list.innerHTML += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <b>${u.name}</b>
+                        <span>${u.email}</span>
+                    </div>
+                    <div class="action-btns">
+                        <i class="fas fa-trash" onclick="del('users/${id}')"></i>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // --- CRUD HELPERS ---
+        function saveContent() {
+            const id = document.getElementById('content-id').value;
+            const path = document.getElementById('content-db').value;
+            const data = { name: document.getElementById('content-name').value, streamURL: document.getElementById('content-url').value, movieURL: document.getElementById('content-url').value, logo: document.getElementById('content-logo').value, posterURL: document.getElementById('content-logo').value, playerType: document.getElementById('content-player').value, licenseURL: document.getElementById('content-license').value };
+            if(id) db.ref(path+'/'+id).update(data); else db.ref(path).push(data);
+            showToast("Saved");
+        }
+
+        function saveAd() {
+            const id = document.getElementById('ad-id').value;
+            const data = { header: document.getElementById('ad-header').value, url: document.getElementById('ad-url').value, platform: document.getElementById('ad-platform').value, link: document.getElementById('ad-link').value };
+            if(id) db.ref('ads/'+id).update(data); else db.ref('ads').push(data);
+            showToast("Ad Pool Updated");
+        }
+
+        function del(p) { if(confirm("Permanently delete?")) db.ref(p).remove().then(() => showToast("Deleted")); }
         function showToast(m) { const t = document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
+        function loadStats() { document.getElementById('stat-users').innerText = Object.keys(allUsers).length; }
     </script>
 </body>
 </html>
