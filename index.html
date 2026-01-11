@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY MIN ADMIN | ULTIMATE HUB</title>
+    <title>STANY MIN ADMIN | MASTER Hub</title>
     
     <!-- Professional Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,41 +28,42 @@
 
         body { background: var(--black); color: var(--white); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* --- iOS 26 Header --- */
+        /* --- Header --- */
         header {
             height: 55px; background: var(--card); border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
         }
-        .brand { font-size: 13px; font-weight: 800; color: var(--red); letter-spacing: 1px; }
+        .brand { font-size: 14px; font-weight: 800; color: var(--red); letter-spacing: 1px; }
 
-        /* --- Layout --- */
         #container { flex: 1; display: flex; overflow: hidden; }
 
+        /* --- Sidebar Navigation --- */
         nav {
             width: 70px; background: var(--card); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 22px;
+            display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px;
         }
         .nav-link { color: #444; font-size: 18px; cursor: pointer; transition: 0.3s; text-align: center; }
         .nav-link.active { color: var(--red); }
         .nav-link span { display: block; font-size: 7px; font-weight: 800; margin-top: 3px; text-transform: uppercase; }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 60px; }
-        .page-view { display: none; animation: slideIn 0.3s ease; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 50px; }
+        .page-view { display: none; animation: slideIn 0.3s; }
         .active-view { display: block; }
-        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- UI Elements --- */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; }
-        .section-title { font-weight: 700; color: var(--red); margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 8px; }
+        /* --- UI Components --- */
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .section-title { font-weight: 700; color: var(--red); margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 8px; }
         
         label { display: block; color: #888; margin-bottom: 4px; font-size: 10px; }
         .input-box { width: 100%; padding: 10px; background: var(--input); border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 10px; }
         .input-box:focus { border-color: var(--red); outline: none; }
 
-        .btn { padding: 10px 15px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; justify-content: center; }
+        .btn { padding: 10px 15px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; justify-content: center; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
         .btn-red { background: var(--red); color: white; width: 100%; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: white; }
-        .btn-sm { padding: 5px 10px; font-size: 10px; }
+        .btn-sm { padding: 5px 8px; font-size: 9px; }
 
         /* --- Lists --- */
         .item-row { 
@@ -70,10 +71,8 @@
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
             border: 1px solid var(--border);
         }
-        .actions { display: flex; gap: 12px; }
-        .actions i { cursor: pointer; font-size: 14px; }
-        .fa-trash { color: #ff4444; }
-        .fa-edit { color: #44ff44; }
+        .token-card { border-left: 4px solid var(--red); }
+        .token-used { border-left-color: #333; opacity: 0.7; }
 
         /* --- Modal --- */
         .modal {
@@ -85,135 +84,132 @@
 
         .social-row { display: flex; gap: 5px; margin-bottom: 5px; }
         .badge { padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
-        .badge-premium { background: gold; color: black; }
+        .badge-used { background: #333; color: #fff; }
+        .badge-unused { background: var(--red); color: #fff; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">STANY MIN ADMIN ULTIMATE</div>
-        <div id="admin-info" style="font-size: 10px; color: #888;">HUB CONNECTED</div>
+        <div class="brand">STANY MIN MASTER ADMIN</div>
+        <div id="connection-status" style="font-size: 9px; color: #44ff44;"><i class="fas fa-circle"></i> SYNCED</div>
     </header>
 
     <div id="container">
         <nav>
-            <div class="nav-link active" onclick="switchTab('dash', this)"><i class="fas fa-grid-2"></i><span>Home</span></div>
-            <div class="nav-link" onclick="switchTab('ads', this)"><i class="fas fa-ad"></i><span>Ads</span></div>
-            <div class="nav-link" onclick="switchTab('media', this)"><i class="fas fa-play-circle"></i><span>Media</span></div>
-            <div class="nav-link" onclick="switchTab('stories', this)"><i class="fas fa-book"></i><span>Simulizi</span></div>
-            <div class="nav-link" onclick="switchTab('updates', this)"><i class="fas fa-rss"></i><span>Post</span></div>
-            <div class="nav-link" onclick="switchTab('users', this)"><i class="fas fa-users-gear"></i><span>Users</span></div>
+            <div class="nav-link active" onclick="switchTab('dash', this)"><i class="fas fa-chart-line"></i><span>Dash</span></div>
             <div class="nav-link" onclick="switchTab('tokens', this)"><i class="fas fa-key"></i><span>Tokens</span></div>
+            <div class="nav-link" onclick="switchTab('users', this)"><i class="fas fa-user-shield"></i><span>Users</span></div>
+            <div class="nav-link" onclick="switchTab('media', this)"><i class="fas fa-play"></i><span>Media</span></div>
+            <div class="nav-link" onclick="switchTab('ads', this)"><i class="fas fa-ad"></i><span>Ads</span></div>
+            <div class="nav-link" onclick="switchTab('stories', this)"><i class="fas fa-book"></i><span>Stories</span></div>
         </nav>
 
         <main>
-            <!-- Dashboard Overview -->
+            <!-- DASHBOARD -->
             <div id="dash" class="page-view active-view">
-                <div class="section-title">Dashboard Overview</div>
+                <div class="section-title">Overview</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="card"><label>Total Users</label><h2 id="st-users">0</h2></div>
-                    <div class="card"><label>Channels</label><h2 id="st-channels">0</h2></div>
-                    <div class="card"><label>Simulizi</label><h2 id="st-stories">0</h2></div>
-                    <div class="card"><label>Tokens Left</label><h2 id="st-tokens">0</h2></div>
+                    <div class="card"><label>Used Tokens</label><h2 id="st-used-tok">0</h2></div>
+                    <div class="card"><label>Live Channels</label><h2 id="st-channels">0</h2></div>
+                    <div class="card"><label>Stories</label><h2 id="st-stories">0</h2></div>
                 </div>
-                <div class="card" style="margin-top: 10px;">
-                    <label>Quick Status</label>
-                    <p style="font-size: 11px; opacity: 0.6;">All systems are functional. Database synced with User App.</p>
+                <div class="card">
+                    <label>Recent Activity</label>
+                    <p style="opacity:0.6; font-size:10px;">Monitor all system transactions here.</p>
                 </div>
             </div>
 
-            <!-- Ad Engine CRUD -->
-            <div id="ads" class="page-view">
-                <div class="section-title">Ad Engine Configuration</div>
-                <button class="btn btn-red" onclick="openModal('ad-modal')">+ Create Sponsor Ad</button>
-                <div id="ads-list" style="margin-top: 15px;"></div>
-            </div>
-
-            <!-- Media CRUD (Channels & Movies) -->
-            <div id="media" class="page-view">
-                <div class="section-title">Channels & Cinema</div>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button class="btn btn-red" onclick="openModal('chan-modal')" style="flex:1;">+ Channel</button>
-                    <button class="btn btn-outline" onclick="openModal('movie-modal')" style="flex:1;">+ Movie</button>
+            <!-- TOKEN ENGINE -->
+            <div id="tokens" class="page-view">
+                <div class="section-title">Advanced Token Generator</div>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Duration Value</label>
+                        <input type="number" id="tok-val" class="input-box" value="1">
+                        <label>Select Unit</label>
+                        <select id="tok-unit" class="input-box">
+                            <option value="seconds">Seconds</option>
+                            <option value="minutes">Minutes</option>
+                            <option value="hours">Hours</option>
+                            <option value="days" selected>Days</option>
+                            <option value="weeks">Weeks</option>
+                            <option value="months">Months (30 Days)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-red" onclick="generateToken()">GENERATE TOKEN</button>
                 </div>
-                <div class="card"><label>Live TV Channels</label><div id="chan-list"></div></div>
-                <div class="card"><label>Movies Collection</label><div id="movie-list"></div></div>
+
+                <div class="section-title">Token History (Used & Unused)</div>
+                <div id="token-list"></div>
             </div>
 
-            <!-- Stories CRUD -->
-            <div id="stories" class="page-view">
-                <div class="section-title">Simulizi Hub</div>
-                <button class="btn btn-red" onclick="openModal('story-modal')">+ Add New Story</button>
-                <div id="story-list" style="margin-top: 15px;"></div>
-            </div>
-
-            <!-- Tech & Betting Updates -->
-            <div id="updates" class="page-view">
-                <div class="section-title">Tech & Betting Post</div>
-                <button class="btn btn-red" onclick="openModal('post-modal')">+ Add New Update</button>
-                <div id="post-list" style="margin-top: 15px;"></div>
-            </div>
-
-            <!-- User Management -->
+            <!-- USER MANAGEMENT -->
             <div id="users" class="page-view">
-                <div class="section-title">User Security & HWID</div>
+                <div class="section-title">Users & Device Security</div>
                 <input type="text" class="input-box" placeholder="Search by email..." onkeyup="searchUser(this.value)">
                 <div id="user-list"></div>
             </div>
 
-            <!-- Token Management -->
-            <div id="tokens" class="page-view">
-                <div class="section-title">Token Generator</div>
-                <div class="card">
-                    <label>Time Duration</label>
-                    <div style="display:flex; gap:5px;">
-                        <input type="number" id="t-val" class="input-box" value="30">
-                        <select id="t-unit" class="input-box">
-                            <option value="minutes">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days" selected>Days</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-red" onclick="genToken()">GENERATE SECURE TOKEN</button>
+            <!-- MEDIA MANAGEMENT -->
+            <div id="media" class="page-view">
+                <div class="section-title">Live TV & Movies</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <button class="btn btn-red" onclick="openModal('chan-modal')" style="flex:1;">+ Channel</button>
+                    <button class="btn btn-outline" onclick="openModal('movie-modal')" style="flex:1;">+ Movie</button>
                 </div>
-                <div id="token-list"></div>
+                <div class="card"><label>Live Channels</label><div id="chan-list"></div></div>
+                <div class="card"><label>Cinema Library</label><div id="movie-list"></div></div>
+            </div>
+
+            <!-- AD ENGINE -->
+            <div id="ads" class="page-view">
+                <div class="section-title">Ultimate Ad Engine</div>
+                <button class="btn btn-red" onclick="openModal('ad-modal')">+ Add Ad Sponsor</button>
+                <div id="ads-list" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- STORIES -->
+            <div id="stories" class="page-view">
+                <div class="section-title">Simulizi Hub</div>
+                <button class="btn btn-red" onclick="openModal('story-modal')">+ Create New Story</button>
+                <div id="story-list" style="margin-top: 15px;"></div>
             </div>
         </main>
     </div>
 
-    <!-- --- MASTER MODALS --- -->
+    <!-- --- MODALS --- -->
 
-    <!-- Ad Config Modal -->
+    <!-- Ad Modal -->
     <div id="ad-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Manage Ad Sponsor</h3>
-            <input type="hidden" id="ad-edit-id">
+            <h3 class="section-title">Sponsor Ad Config</h3>
             <label>Sponsor Name</label><input id="ad-name" class="input-box">
-            <label>Ad Media URL (Image/Video)</label><input id="ad-media" class="input-box">
-            <label>Marquee Top (Sliding words)</label><input id="ad-m-top" class="input-box">
-            <label>Marquee Bottom</label><input id="ad-m-bottom" class="input-box">
-            <label>Social Hub Icons (Icon | Link)</label>
+            <label>Media URL</label><input id="ad-media" class="input-box">
+            <label>Marquee Top Text</label><input id="ad-m-top" class="input-box">
+            <label>Marquee Bottom Text</label><input id="ad-m-bottom" class="input-box">
             <div id="social-box">
-                <div class="social-row"><input class="input-box s-ico" placeholder="fa-brands fa-whatsapp" style="width:40%"><input class="input-box s-url" placeholder="Link" style="width:60%"></div>
+                <label>Social Hub Icons (fa-brands fa-whatsapp | Link)</label>
+                <div class="social-row"><input class="input-box s-ico" placeholder="Icon Class" style="width:40%"><input class="input-box s-url" placeholder="URL" style="width:60%"></div>
             </div>
-            <button class="btn btn-outline" style="width:100%; margin-bottom:10px;" onclick="addSocialRow()">+ Add Social Field</button>
-            <button class="btn btn-red" onclick="saveAd()">SAVE AD SPONSOR</button>
+            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:10px;" onclick="addSocialRow()">+ Add Icon Field</button>
+            <button class="btn btn-red" onclick="saveAd()">SAVE AD</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
     </div>
 
-    <!-- Channel Modal (DRM Ready) -->
+    <!-- Channel Modal -->
     <div id="chan-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Live Channel Setup</h3>
-            <input type="hidden" id="ch-edit-id">
-            <label>Channel Name</label><input id="ch-name" class="input-box">
-            <label>Logo/Poster URL</label><input id="ch-logo" class="input-box">
-            <label>Stream URL (m3u8/mpd)</label><input id="ch-url" class="input-box">
-            <div style="border: 1px solid #333; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
-                <label style="color:var(--red)">DRM SYSTEM (OPTIONAL)</label>
-                <label>License URL</label><input id="ch-lic" class="input-box">
-                <label>Bearer Token ID</label><input id="ch-token" class="input-box">
+            <h3 class="section-title">Channel Setup</h3>
+            <label>Name</label><input id="ch-name" class="input-box">
+            <label>Stream URL</label><input id="ch-url" class="input-box">
+            <label>Logo URL</label><input id="ch-logo" class="input-box">
+            <div style="border: 1px solid #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                <label style="color:var(--red)">DRM CONFIG (LICENSE)</label>
+                <input id="ch-lic" class="input-box" placeholder="License URL">
+                <input id="ch-token" class="input-box" placeholder="Bearer Token">
             </div>
             <button class="btn btn-red" onclick="saveChannel()">SAVE CHANNEL</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
@@ -223,11 +219,11 @@
     <!-- Story Episode Modal -->
     <div id="ep-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Add Story Episode</h3>
+            <h3 class="section-title">Add Episode / Part</h3>
             <input type="hidden" id="ep-sid">
-            <label>Episode Title (e.g Part 1)</label><input id="ep-title" class="input-box">
-            <label>Episode Content (Maandishi)</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
-            <button class="btn btn-red" onclick="saveEpisode()">UPLOAD EPISODE</button>
+            <label>Part Title (e.g Part 1)</label><input id="ep-title" class="input-box">
+            <label>Story Content</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
+            <button class="btn btn-red" onclick="saveEpisode()">UPLOAD PART</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
     </div>
@@ -235,19 +231,18 @@
     <!-- Story Modal -->
     <div id="story-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">New Simulizi Profile</h3>
+            <h3 class="section-title">New Simulizi</h3>
             <label>Title</label><input id="st-title" class="input-box">
             <label>Author</label><input id="st-author" class="input-box">
             <label>Genre</label><input id="st-genre" class="input-box">
-            <label>Cover URL (Drop Image)</label><input id="st-cover" class="input-box">
-            <label>About Description</label><textarea id="st-about" class="input-box" style="height:50px"></textarea>
-            <button class="btn btn-red" onclick="saveStory()">CREATE STORY</button>
+            <label>Cover URL</label><input id="st-cover" class="input-box">
+            <button class="btn btn-red" onclick="saveStory()">SAVE PROFILE</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
     </div>
 
     <script>
-        // --- FIREBASE CONFIG (SYNCED) ---
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyDiexD5WK9GLhQldr6zNmC8iYWc4em5eyM",
             authDomain: "stany-min-tv.firebaseapp.com",
@@ -262,7 +257,7 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        // Navigation
+        // TABS
         function switchTab(id, el) {
             document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active-view'));
             document.getElementById(id).classList.add('active-view');
@@ -270,50 +265,88 @@
             if(el) el.classList.add('active');
             
             if(id === 'dash') loadDash();
-            if(id === 'ads') loadAds();
-            if(id === 'media') { loadChannels(); loadMovies(); }
-            if(id === 'stories') loadStories();
-            if(id === 'users') loadUsers();
             if(id === 'tokens') loadTokens();
+            if(id === 'users') loadUsers();
+            if(id === 'media') { loadChannels(); loadMovies(); }
+            if(id === 'ads') loadAds();
+            if(id === 'stories') loadStories();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
-        // --- AD ENGINE ---
-        function addSocialRow() {
-            const div = document.createElement('div'); div.className = 'social-row';
-            div.innerHTML = `<input class="input-box s-ico" placeholder="Icon Class" style="width:40%"><input class="input-box s-url" placeholder="Link" style="width:60%">`;
-            document.getElementById('social-box').appendChild(div);
+        // --- TOKEN ENGINE ---
+        function generateToken() {
+            const val = document.getElementById('tok-val').value;
+            const unit = document.getElementById('tok-unit').value;
+            const tokenCode = "STANY-" + Math.random().toString(36).substr(2, 8).toUpperCase();
+            
+            let ms = 0;
+            if(unit==='seconds') ms = val * 1000;
+            if(unit==='minutes') ms = val * 60000;
+            if(unit==='hours') ms = val * 3600000;
+            if(unit==='days') ms = val * 86400000;
+            if(unit==='weeks') ms = val * 604800000;
+            if(unit==='months') ms = val * 2592000000;
+
+            db.ref('tokens/'+tokenCode).set({
+                token: tokenCode,
+                durationMs: ms,
+                status: 'unused',
+                createdAt: Date.now()
+            }).then(() => alert("TOKEN GENERATED: " + tokenCode));
         }
 
-        function saveAd() {
-            const soc = [];
-            document.querySelectorAll('.social-row').forEach(r => {
-                const icon = r.querySelector('.s-ico').value;
-                const url = r.querySelector('.s-url').value;
-                if(icon) soc.push({ icon, url });
-            });
-            const data = {
-                sponsor: document.getElementById('ad-sponsor').value,
-                media: document.getElementById('ad-media').value,
-                mTop: document.getElementById('ad-m-top').value,
-                mBottom: document.getElementById('ad-m-bottom').value,
-                socialHub: soc
-            };
-            db.ref('ads/list').push(data).then(() => closeModal());
-        }
-
-        function loadAds() {
-            db.ref('ads/list').on('value', s => {
-                const l = document.getElementById('ads-list'); l.innerHTML = '';
-                s.forEach(c => {
-                    l.innerHTML += `<div class="item-row"><span>${c.val().sponsor}</span><i class="fas fa-trash" onclick="delData('ads/list/${c.key}')"></i></div>`;
+        function loadTokens() {
+            db.ref('tokens').on('value', s => {
+                const list = document.getElementById('token-list'); list.innerHTML = '';
+                s.forEach(child => {
+                    const t = child.val();
+                    const isUsed = t.status === 'used';
+                    list.innerHTML += `
+                        <div class="item-row token-card ${isUsed?'token-used':''}">
+                            <div style="flex:1">
+                                <b style="font-size:13px; color:var(--red)">${t.token}</b>
+                                <div style="font-size:9px; opacity:0.6">Duration: ${Math.floor(t.durationMs/60000)} Mins</div>
+                                ${isUsed ? `<div style="color:#44ff44; font-size:10px;">Used by: ${t.usedByName} (${t.usedByEmail})</div>` : ''}
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <i class="fas fa-copy" style="color:var(--white); font-size:16px;" onclick="copyTok('${t.token}')"></i>
+                                <i class="fas fa-trash" onclick="delData('tokens/${child.key}')"></i>
+                            </div>
+                        </div>`;
                 });
             });
         }
 
-        // --- MEDIA & DRM ---
+        function copyTok(txt) { navigator.clipboard.writeText(txt); alert("Token Copied!"); }
+
+        // --- USERS ---
+        function loadUsers() {
+            db.ref('users').on('value', s => {
+                const list = document.getElementById('user-list'); list.innerHTML = '';
+                s.forEach(child => {
+                    const u = child.val();
+                    list.innerHTML += `
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between;">
+                                <b>${u.name || 'User'}</b>
+                                <span style="font-size:9px; color:var(--red)">${u.subscriptionType || 'FREE'}</span>
+                            </div>
+                            <div style="font-size:10px; opacity:0.6">${u.email}</div>
+                            <div style="font-size:9px; color:#555">Device HWID: ${u.hwid || 'NONE'}</div>
+                            <div style="margin-top:10px; display:flex; gap:10px;">
+                                <button class="btn btn-outline btn-sm" onclick="resetHWID('${child.key}')">Reset Device</button>
+                                <button class="btn btn-outline btn-sm" onclick="alert('User Secret: ${u.password}')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-outline btn-sm" style="color:red" onclick="delData('users/${child.key}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+        function resetHWID(uid) { db.ref(`users/${uid}/hwid`).remove().then(() => alert("Device Lock Removed!")); }
+
+        // --- MEDIA ---
         function saveChannel() {
             const data = {
                 name: document.getElementById('ch-name').value,
@@ -327,21 +360,49 @@
 
         function loadChannels() {
             db.ref('channels').on('value', s => {
-                const l = document.getElementById('chan-list'); l.innerHTML = '';
-                s.forEach(c => {
-                    l.innerHTML += `<div class="item-row"><span>${c.val().name}</span><div class="actions"><i class="fas fa-trash" onclick="delData('channels/${c.key}')"></i></div></div>`;
-                });
+                const list = document.getElementById('chan-list'); list.innerHTML = '';
+                s.forEach(c => list.innerHTML += `<div class="item-row"><span>${c.val().name}</span><i class="fas fa-trash" onclick="delData('channels/${c.key}')"></i></div>`);
             });
         }
 
-        // --- SIMULIZI ---
+        // --- ADS ---
+        function addSocialRow() {
+            const div = document.createElement('div'); div.className = 'social-row';
+            div.innerHTML = `<input class="input-box s-ico" placeholder="Icon Class" style="width:40%"><input class="input-box s-url" placeholder="URL" style="width:60%">`;
+            document.getElementById('social-box').appendChild(div);
+        }
+
+        function saveAd() {
+            const soc = [];
+            document.querySelectorAll('.social-row').forEach(r => {
+                const icon = r.querySelector('.s-ico').value;
+                const url = r.querySelector('.s-url').value;
+                if(icon) soc.push({ icon, url });
+            });
+            const data = {
+                sponsor: document.getElementById('ad-name').value,
+                media: document.getElementById('ad-media').value,
+                mTop: document.getElementById('ad-m-top').value,
+                mBottom: document.getElementById('ad-m-bottom').value,
+                socialHub: soc
+            };
+            db.ref('ads/list').push(data).then(() => closeModal());
+        }
+
+        function loadAds() {
+            db.ref('ads/list').on('value', s => {
+                const l = document.getElementById('ads-list'); l.innerHTML = '';
+                s.forEach(c => l.innerHTML += `<div class="item-row"><span>${c.val().sponsor}</span><i class="fas fa-trash" onclick="delData('ads/list/${c.key}')"></i></div>`);
+            });
+        }
+
+        // --- STORIES ---
         function saveStory() {
             const data = {
                 title: document.getElementById('st-title').value,
                 author: document.getElementById('st-author').value,
                 genre: document.getElementById('st-genre').value,
-                cover: document.getElementById('st-cover').value,
-                about: document.getElementById('st-about').value
+                cover: document.getElementById('st-cover').value
             };
             db.ref('simulizi').push(data).then(() => closeModal());
         }
@@ -355,9 +416,9 @@
                         <div class="card">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <b>${st.title}</b>
-                                <button class="btn btn-outline btn-sm" onclick="openEpModal('${c.key}')"><i class="fas fa-plus"></i> EPISODE</button>
+                                <button class="btn btn-outline btn-sm" onclick="openEpModal('${c.key}')"><i class="fas fa-plus"></i> Episode</button>
                             </div>
-                            <div id="ep-box-${c.key}" style="margin-top:10px; opacity:0.6;"></div>
+                            <div id="ep-list-${c.key}" style="margin-top:10px; opacity:0.6;"></div>
                             <i class="fas fa-trash" style="margin-top:10px; color:red" onclick="delData('simulizi/${c.key}')"></i>
                         </div>`;
                     loadEpList(c.key);
@@ -373,62 +434,25 @@
         }
         function loadEpList(sid) {
             db.ref(`simulizi/${sid}/parts`).on('value', s => {
-                const box = document.getElementById('ep-box-'+sid); box.innerHTML = '';
-                s.forEach(c => box.innerHTML += `<div style="font-size:10px;">• ${c.val().title}</div>`);
+                const div = document.getElementById('ep-list-'+sid); div.innerHTML = '';
+                s.forEach(c => div.innerHTML += `<div style="font-size:9px;">• ${c.val().title}</div>`);
             });
         }
 
-        // --- USERS & HWID ---
-        function loadUsers() {
-            db.ref('users').on('value', s => {
-                const l = document.getElementById('user-list'); l.innerHTML = '';
-                s.forEach(c => {
-                    const u = c.val();
-                    l.innerHTML += `
-                        <div class="item-row" style="flex-direction:column; align-items:flex-start;">
-                            <b>${u.email}</b>
-                            <span style="font-size:9px; color:#555;">ID: ${c.key} | HWID: ${u.hwid || 'NONE'}</span>
-                            <div style="display:flex; gap:10px; margin-top:10px;">
-                                <button class="btn btn-outline btn-sm" onclick="resetHWID('${c.key}')">Reset Device</button>
-                                <button class="btn btn-outline btn-sm" onclick="alert('Pass: ${u.password}')">View Pass</button>
-                                <button class="btn btn-outline btn-sm" style="color:red" onclick="delData('users/${c.key}')">Delete</button>
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-        function resetHWID(uid) { db.ref(`users/${uid}/hwid`).remove().then(() => alert("Device Unlocked!")); }
-
-        // --- TOKENS ---
-        function genToken() {
-            const v = document.getElementById('tok-val').value;
-            const u = document.getElementById('tok-unit').value;
-            const token = Math.random().toString(36).substr(2, 8).toUpperCase();
-            let ms = 0;
-            if(u === 'minutes') ms = v * 60000;
-            if(u === 'hours') ms = v * 3600000;
-            if(u === 'days') ms = v * 86400000;
-            db.ref('tokens/'+token).set({ token, duration: ms, status: 'unused' }).then(() => alert("Token: "+token));
-        }
-
-        function loadTokens() {
-            db.ref('tokens').on('value', s => {
-                const l = document.getElementById('token-list'); l.innerHTML = '';
-                s.forEach(c => l.innerHTML += `<div class="item-row"><span>${c.val().token}</span><i class="fas fa-trash" onclick="delData('tokens/${c.key}')"></i></div>`);
-            });
-        }
-
-        // Dashboard Stats
+        // STATS
         function loadDash() {
             db.ref('users').on('value', s => document.getElementById('st-users').innerText = s.numChildren());
             db.ref('channels').on('value', s => document.getElementById('st-channels').innerText = s.numChildren());
             db.ref('simulizi').on('value', s => document.getElementById('st-stories').innerText = s.numChildren());
-            db.ref('tokens').on('value', s => document.getElementById('st-tokens').innerText = s.numChildren());
+            db.ref('tokens').on('value', s => {
+                let used = 0; s.forEach(c => { if(c.val().status === 'used') used++; });
+                document.getElementById('st-used-tok').innerText = used;
+            });
         }
 
         function delData(path) { if(confirm("Permanently delete?")) db.ref(path).remove(); }
 
-        // Security check
+        // AUTH PROTECTION
         auth.onAuthStateChanged(user => {
             if(!user) {
                 const e = prompt("Admin Email:");
