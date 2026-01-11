@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY ADMIN - ULTIMATE COMMAND</title>
+    <title>STANY ADMIN - SUPREME COMMAND PRO</title>
     
     <!-- FONTS & ICONS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; outline: none; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; font-size: 12px; display: flex; }
 
-        /* MINI SIDEBAR */
+        /* SIDEBAR (USIBADILI) */
         .sidebar { width: 55px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; flex-shrink: 0; }
         .nav-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #444; cursor: pointer; transition: 0.3s; font-size: 16px; position: relative; }
         .nav-icon.active { background: var(--primary); color: white; }
@@ -42,31 +42,27 @@
         .page-view.active { display: block; }
         h2 { font-size: 13px; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; font-weight: 800; border-left: 3px solid var(--primary); padding-left: 8px; }
 
-        /* CARDS & ROWS */
+        /* CARDS & ITEMS */
         .app-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 15px; margin-bottom: 12px; }
         .item-row { background: #050505; border: 1px solid #111; padding: 10px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
         .item-info b { font-size: 11px; color: var(--primary); display: block; }
         .item-info span { font-size: 9px; color: #555; display: block; }
         
-        /* CHAT INBOX STYLE */
         .chat-item { border-left: 3px solid transparent; cursor: pointer; transition: 0.2s; }
         .chat-item.unread { border-left: 3px solid var(--primary); background: #110000; }
-        .chat-item b { font-size: 12px; color: #fff; }
-        .chat-item small { color: var(--primary); font-weight: 600; font-size: 9px; }
 
         /* FORMS */
         label { display: block; font-size: 9px; color: var(--gray); font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
         input, select, textarea { width: 100%; padding: 8px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 11px; }
         .btn { padding: 8px 12px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; }
-        .btn-p { background: var(--primary); color: white; width: 100%; }
+        .btn-p { background: var(--primary); color: white; width: 100%; margin-top: 5px; }
         .btn-d { background: #1a1a1a; color: white; }
 
-        /* ACTION ICONS */
         .action-btns i { cursor: pointer; padding: 7px; border-radius: 6px; background: #111; font-size: 11px; margin-left: 4px; }
         .fa-trash { color: #ff3b30; }
         .fa-edit { color: #007aff; }
 
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 8px 20px; border-radius: 20px; font-size: 10px; display: none; z-index: 20000; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 8px 20px; border-radius: 20px; font-size: 10px; display: none; z-index: 20000; font-weight: bold; }
         ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
@@ -77,19 +73,20 @@
         <div class="nav-icon active" onclick="switchNav('home', this)"><i class="fas fa-home"></i></div>
         <div class="nav-icon" onclick="switchNav('users', this)"><i class="fas fa-users"></i></div>
         <div class="nav-icon" onclick="switchNav('content', this)"><i class="fas fa-play"></i></div>
+        <div class="nav-icon" onclick="switchNav('categories', this)"><i class="fas fa-tags"></i></div>
         <div class="nav-icon" onclick="switchNav('ads', this)"><i class="fas fa-ad"></i></div>
-        <div class="nav-icon" onclick="switchNav('library', this)"><i class="fas fa-book"></i></div>
         <div class="nav-icon" onclick="switchNav('chat', this)">
             <i class="fas fa-comment-dots"></i>
             <div class="nav-dot" id="chat-alert"></div>
         </div>
         <div class="nav-icon" onclick="switchNav('settings', this)"><i class="fas fa-cog"></i></div>
+        <div class="nav-icon" onclick="auth.signOut()" style="margin-top:auto; color:red;"><i class="fas fa-power-off"></i></div>
     </div>
 
     <div class="main">
         <div class="top-bar">
-            <div class="brand">STANY ADMIN SUPREME</div>
-            <i class="fas fa-power-off" onclick="auth.signOut()" style="color:var(--primary);"></i>
+            <div class="brand">STANY ADMIN COMMAND</div>
+            <i class="fas fa-sync" onclick="location.reload()" style="font-size:12px; color:var(--primary);"></i>
         </div>
 
         <!-- DASHBOARD -->
@@ -107,32 +104,29 @@
             </div>
         </div>
 
-        <!-- USER TRACKER -->
+        <!-- USERS -->
         <div id="view-users" class="page-view">
             <h2>USER MANAGEMENT</h2>
             <div id="user-list"></div>
         </div>
 
-        <!-- CONTENT CRUD -->
+        <!-- CONTENT -->
         <div id="view-content" class="page-view">
             <div class="app-card">
-                <h3 id="content-form-title" style="font-size:11px; margin-bottom:8px;">ADD CONTENT</h3>
                 <input type="hidden" id="content-id">
-                <select id="content-db"><option value="channels">Live Channel</option><option value="movies">Movies</option><option value="adultContent">Adult 18+</option></select>
+                <select id="content-db"><option value="channels">Live Channel</option><option value="movies">Movies</option></select>
                 <input id="content-name" placeholder="Title">
                 <input id="content-url" placeholder="URL">
-                <input id="content-logo" placeholder="Poster URL">
-                <select id="content-player"><option value="internal">Standard</option><option value="drm">DRM Pro</option></select>
-                <input id="content-license" placeholder="License URL">
-                <button class="btn btn-p" onclick="saveContent()">SAVE DATA</button>
+                <input id="content-logo" placeholder="Logo URL">
+                <button class="btn btn-p" onclick="saveContent()">SAVE CONTENT</button>
             </div>
             <div id="content-list"></div>
         </div>
 
-        <!-- ADS & SPONSORS -->
+        <!-- ADS MANAGER (20+ PLATFORMS) -->
         <div id="view-ads" class="page-view">
             <div class="app-card">
-                <h3>ADS POOL</h3>
+                <h3>MANAGE SPONSORS</h3>
                 <input type="hidden" id="ad-id">
                 <input id="ad-header" placeholder="Header Text">
                 <input id="ad-url" placeholder="Media URL">
@@ -141,15 +135,33 @@
                     <option value="whatsapp">WhatsApp</option>
                     <option value="telegram">Telegram</option>
                     <option value="youtube">YouTube</option>
-                    <option value="globe">Browser</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="twitter">X / Twitter</option>
+                    <option value="discord">Discord</option>
+                    <option value="snapchat">Snapchat</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="pinterest">Pinterest</option>
+                    <option value="twitch">Twitch</option>
+                    <option value="threads">Threads</option>
+                    <option value="reddit">Reddit</option>
+                    <option value="skype">Skype</option>
+                    <option value="envelope">Email</option>
+                    <option value="phone">Phone Call</option>
+                    <option value="spotify">Spotify</option>
+                    <option value="apple">Apple Music</option>
+                    <option value="google-play">Play Store</option>
+                    <option value="app-store-ios">App Store</option>
+                    <option value="globe">Browser / Web</option>
                 </select>
-                <input id="ad-link" placeholder="Social URL">
-                <button class="btn btn-p" onclick="saveAd()">SAVE AD</button>
+                <input id="ad-link" placeholder="Social Link URL">
+                <button class="btn btn-p" onclick="saveAd()">SAVE SPONSOR</button>
             </div>
             <div id="ads-list"></div>
         </div>
 
-        <!-- SUPPORT CHAT (UNREAD TRACKER) -->
+        <!-- CHAT INBOX -->
         <div id="view-chat" class="page-view">
             <h2>INBOX (PRIVATE DM)</h2>
             <div id="chat-list"></div>
@@ -162,10 +174,11 @@
                     <input id="reply-input" placeholder="Reply..." style="margin:0">
                     <button class="btn btn-p" style="width:60px" onclick="sendReply()">SEND</button>
                 </div>
+                <button class="btn btn-d" style="width:100%; margin-top:5px;" onclick="closeChat()">CLOSE</button>
             </div>
         </div>
 
-        <!-- SETTINGS (WA NUMBER) -->
+        <!-- SETTINGS -->
         <div id="view-settings" class="page-view">
             <h2>APP SETTINGS</h2>
             <div class="app-card">
@@ -180,7 +193,7 @@
     <div id="toast">Saved!</div>
 
     <script>
-        // FIREBASE CONFIG
+        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDiexD5WK9GLhQldr6zNmC8iYWc4em5eyM",
             authDomain: "stany-min-tv.firebaseapp.com",
@@ -203,7 +216,6 @@
         function login() { auth.signInWithEmailAndPassword(document.getElementById('adminEmail').value, document.getElementById('adminPass').value); }
 
         function init() {
-            // Pre-load users to match DMs with Names
             db.ref('users').on('value', snap => {
                 allUsers = snap.val() || {};
                 loadStats(); loadUsersList(); loadSupportList();
@@ -218,113 +230,88 @@
             el.classList.add('active');
         }
 
-        // --- SUPPORT CHAT LOGIC ---
+        // --- FIXED DELETE FUNCTION ---
+        function del(path) {
+            if(confirm("Permanently delete this?")) {
+                db.ref(path).remove().then(() => showToast("Deleted!"));
+            }
+        }
+
+        // --- SUPPORT CHAT ---
         function loadSupportList() {
             db.ref('supportChats').on('value', snap => {
                 const list = document.getElementById('chat-list'); list.innerHTML = '';
                 let unreadCount = 0;
-
                 snap.forEach(child => {
                     const uid = child.key;
                     const msgs = Object.values(child.val());
                     const lastMsg = msgs[msgs.length - 1];
                     const user = allUsers[uid] || { name: "Unknown", email: "No Email" };
-                    
                     const isUnread = lastMsg.uid !== 'admin';
                     if(isUnread) unreadCount++;
-
-                    list.innerHTML += `
-                    <div class="item-row chat-item ${isUnread?'unread':''}" onclick="openChat('${uid}')">
-                        <div class="item-info">
-                            <b>${user.name} ${isUnread?'<small>(NEW)</small>':''}</b>
-                            <span>${user.email}</span>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:#333"></i>
-                    </div>`;
+                    list.innerHTML += `<div class="item-row chat-item ${isUnread?'unread':''}" onclick="openChat('${uid}')"><div class="item-info"><b>${user.name} ${isUnread?'<small>(NEW)</small>':''}</b><span>${user.email}</span></div><i class="fas fa-chevron-right"></i></div>`;
                 });
-
                 document.getElementById('chat-alert').style.display = unreadCount > 0 ? 'block' : 'none';
             });
         }
-
         function openChat(uid) {
             window.activeChatId = uid;
-            const user = allUsers[uid] || { name: "Unknown", email: "No Email" };
+            const user = allUsers[uid] || { name: "User", email: "No Email" };
             document.getElementById('chat-window').style.display = 'block';
             document.getElementById('chat-list').style.display = 'none';
             document.getElementById('chat-user-name').innerText = user.name;
             document.getElementById('chat-user-email').innerText = user.email;
-
             db.ref('supportChats/' + uid).on('value', snap => {
                 const box = document.getElementById('chat-msgs'); box.innerHTML = '';
                 snap.forEach(m => {
-                    const d = m.val();
-                    const isAdmin = d.uid === 'admin';
-                    box.innerHTML += `<div style="padding:6px 10px; border-radius:10px; margin-bottom:5px; font-size:11px; align-self:${isAdmin?'flex-end':'flex-start'}; background:${isAdmin?'var(--primary)':'#222'}; color:white; max-width:85%">${d.text}</div>`;
+                    const isAdmin = m.val().uid === 'admin';
+                    box.innerHTML += `<div style="padding:6px; border-radius:10px; margin-bottom:5px; align-self:${isAdmin?'flex-end':'flex-start'}; background:${isAdmin?'var(--primary)':'#222'}; color:white;">${m.val().text}</div>`;
                 });
                 box.scrollTop = box.scrollHeight;
             });
         }
-
         function sendReply() {
             const t = document.getElementById('reply-input').value;
             if(!t) return;
-            db.ref('supportChats/' + window.activeChatId).push({
-                name: "Admin", uid: "admin", text: t, timestamp: Date.now()
-            });
+            db.ref('supportChats/' + window.activeChatId).push({ name: "Admin", uid: "admin", text: t, timestamp: Date.now() });
             document.getElementById('reply-input').value = '';
         }
+        function closeChat() { document.getElementById('chat-window').style.display = 'none'; document.getElementById('chat-list').style.display = 'block'; }
 
-        function closeChat() {
-            document.getElementById('chat-window').style.display = 'none';
-            document.getElementById('chat-list').style.display = 'block';
-        }
-
-        // --- SETTINGS (WA NUMBER) ---
-        function loadSettings() {
-            db.ref('settings/adminContactNumber').once('value', s => {
-                document.getElementById('set-wa').value = s.val() || "";
-            });
-        }
-        function saveSettings() {
-            const num = document.getElementById('set-wa').value;
-            db.ref('settings/adminContactNumber').set(num).then(() => showToast("WA Number Updated"));
-        }
-
-        // --- USERS ---
-        function loadUsersList() {
-            const list = document.getElementById('user-list'); list.innerHTML = '';
-            Object.entries(allUsers).forEach(([id, u]) => {
-                list.innerHTML += `
-                <div class="item-row">
-                    <div class="item-info">
-                        <b>${u.name}</b>
-                        <span>${u.email}</span>
-                    </div>
-                    <div class="action-btns">
-                        <i class="fas fa-trash" onclick="del('users/${id}')"></i>
-                    </div>
-                </div>`;
-            });
-        }
-
-        // --- CRUD HELPERS ---
+        // --- CONTENT & ADS ---
         function saveContent() {
             const id = document.getElementById('content-id').value;
             const path = document.getElementById('content-db').value;
-            const data = { name: document.getElementById('content-name').value, streamURL: document.getElementById('content-url').value, movieURL: document.getElementById('content-url').value, logo: document.getElementById('content-logo').value, posterURL: document.getElementById('content-logo').value, playerType: document.getElementById('content-player').value, licenseURL: document.getElementById('content-license').value };
+            const data = { name: document.getElementById('content-name').value, streamURL: document.getElementById('content-url').value, movieURL: document.getElementById('content-url').value, logo: document.getElementById('content-logo').value, posterURL: document.getElementById('content-logo').value };
             if(id) db.ref(path+'/'+id).update(data); else db.ref(path).push(data);
             showToast("Saved");
         }
-
+        function loadContentList() {
+            const list = document.getElementById('content-list'); list.innerHTML = '';
+            ['channels', 'movies'].forEach(p => {
+                db.ref(p).on('value', snap => {
+                    snap.forEach(c => { list.innerHTML += `<div class="item-row"><div class="item-info"><b>${c.val().name}</b><span>${p}</span></div><i class="fas fa-trash" onclick="del('${p}/${c.key}')"></i></div>`; });
+                });
+            });
+        }
         function saveAd() {
             const id = document.getElementById('ad-id').value;
             const data = { header: document.getElementById('ad-header').value, url: document.getElementById('ad-url').value, platform: document.getElementById('ad-platform').value, link: document.getElementById('ad-link').value };
             if(id) db.ref('ads/'+id).update(data); else db.ref('ads').push(data);
-            showToast("Ad Pool Updated");
+            showToast("Ad Saved");
         }
-
-        function del(p) { if(confirm("Permanently delete?")) db.ref(p).remove().then(() => showToast("Deleted")); }
+        function loadAdsList() {
+            db.ref('ads').on('value', snap => {
+                const list = document.getElementById('ads-list'); list.innerHTML = '';
+                snap.forEach(c => { list.innerHTML += `<div class="item-row"><b>${c.val().header}</b><i class="fas fa-trash" onclick="del('ads/${c.key}')"></i></div>`; });
+            });
+        }
+        function loadUsersList() {
+            const list = document.getElementById('user-list'); list.innerHTML = '';
+            Object.entries(allUsers).forEach(([id, u]) => { list.innerHTML += `<div class="item-row"><b>${u.name}</b><i class="fas fa-trash" onclick="del('users/${id}')"></i></div>`; });
+        }
+        function saveSettings() { db.ref('settings/adminContactNumber').set(document.getElementById('set-wa').value).then(() => showToast("Updated")); }
+        function loadSettings() { db.ref('settings/adminContactNumber').once('value', s => { document.getElementById('set-wa').value = s.val() || ""; }); }
         function showToast(m) { const t = document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
         function loadStats() { document.getElementById('stat-users').innerText = Object.keys(allUsers).length; }
     </script>
