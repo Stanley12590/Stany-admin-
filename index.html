@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY MIN ADMIN | SUPREME v5.0</title>
+    <title>STANY ADMIN | BOSS EDITION</title>
     
+    <!-- Professional Resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
 
     <style>
-        :root { --red: #FF0000; --black: #000000; --white: #FFFFFF; --card: #121212; --border: #222; --input: #0A0A0A; }
+        :root {
+            --red: #FF0000;
+            --black: #000000;
+            --white: #FFFFFF;
+            --card: #121212;
+            --border: #222;
+            --input: #0A0A0A;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 12px; }
         body { background: var(--black); color: var(--white); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        header { height: 55px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
-        .brand { font-size: 14px; font-weight: 800; color: var(--red); letter-spacing: 1px; }
+        header { height: 55px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
+        .brand { font-size: 14px; font-weight: 800; color: var(--red); letter-spacing: 1.5px; }
 
         #container { flex: 1; display: flex; overflow: hidden; }
         nav { width: 75px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 15px; overflow-y: auto; }
@@ -27,12 +37,12 @@
         .nav-link span { display: block; font-size: 7px; font-weight: 800; margin-top: 3px; text-transform: uppercase; }
 
         main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
-        .page-view { display: none; }
-        .active-view { display: block; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .page-view { display: none; animation: fadeIn 0.3s ease; }
+        .active-view { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; }
-        .section-title { font-weight: 700; color: var(--red); margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 10px; }
+        .section-title { font-weight: 700; color: var(--red); margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 10px; }
         
         label { display: block; color: #888; margin-bottom: 5px; font-size: 10px; }
         .input-box { width: 100%; padding: 12px; background: var(--input); border: 1px solid var(--border); color: white; border-radius: 10px; margin-bottom: 10px; }
@@ -43,35 +53,35 @@
         .btn-outline { background: transparent; border: 1px solid var(--border); color: white; }
 
         .item-row { background: var(--input); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border: 1px solid var(--border); }
-        .item-info { flex: 1; }
         .actions { display: flex; gap: 15px; }
         .fa-trash { color: #ff4444; cursor: pointer; }
         .fa-edit { color: #44ff44; cursor: pointer; }
 
-        .tok-card { border-left: 4px solid var(--red); }
-        .tok-used { border-left-color: #333; opacity: 0.5; }
-
+        /* Modal */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card); border: 1px solid var(--red); width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; }
-        .social-input-group { display: flex; gap: 5px; margin-bottom: 8px; }
+        
+        /* Social Inputs */
+        .social-entry { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; background: #000; padding: 8px; border-radius: 10px; }
+        .social-entry i { color: var(--red); cursor: pointer; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">STANY MIN ADMIN PRO</div>
-        <div id="conn-status" style="font-size: 9px; color: #44ff44;"><i class="fas fa-circle"></i> HUB CONNECTED</div>
+        <div class="brand">STANY MIN BOSS ADMIN</div>
+        <div id="status" style="font-size: 9px; color: #44ff44;"><i class="fas fa-circle"></i> CONNECTED</div>
     </header>
 
     <div id="container">
         <nav>
-            <div class="nav-link active" onclick="switchTab('dash', this)"><i class="fas fa-home"></i><span>Home</span></div>
-            <div class="nav-link" onclick="switchTab('tokens', this)"><i class="fas fa-key"></i><span>Tokens</span></div>
+            <div class="nav-link active" onclick="switchTab('dash', this)"><i class="fas fa-chart-line"></i><span>Dash</span></div>
             <div class="nav-link" onclick="switchTab('ads', this)"><i class="fas fa-ad"></i><span>Ads Hub</span></div>
-            <div class="nav-link" onclick="switchTab('media', this)"><i class="fas fa-play-circle"></i><span>Content</span></div>
+            <div class="nav-link" onclick="switchTab('media', this)"><i class="fas fa-play-circle"></i><span>Media</span></div>
             <div class="nav-link" onclick="switchTab('stories', this)"><i class="fas fa-book"></i><span>Simulizi</span></div>
-            <div class="nav-link" onclick="switchTab('posts', this)"><i class="fas fa-rss"></i><span>Updates</span></div>
-            <div class="nav-link" onclick="switchTab('slider', this)"><i class="fas fa-images"></i><span>Sliders</span></div>
+            <div class="nav-link" onclick="switchTab('tokens', this)"><i class="fas fa-key"></i><span>Tokens</span></div>
             <div class="nav-link" onclick="switchTab('users', this)"><i class="fas fa-users-cog"></i><span>Users</span></div>
         </nav>
 
@@ -82,14 +92,21 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="card"><label>Total Users</label><h2 id="st-users">0</h2></div>
                     <div class="card"><label>Used Tokens</label><h2 id="st-tokens">0</h2></div>
-                    <div class="card"><label>Channels</label><h2 id="st-channels">0</h2></div>
+                    <div class="card"><label>Live Channels</label><h2 id="st-channels">0</h2></div>
                     <div class="card"><label>Simulizi</label><h2 id="st-stories">0</h2></div>
                 </div>
             </div>
 
+            <!-- ADS HUB (RE-ENGINEERED) -->
+            <div id="ads" class="page-view">
+                <div class="section-title">Ultimate Ads & Social Hub</div>
+                <button class="btn btn-red" onclick="openAdForm()">+ Setup New Sponsor Ad</button>
+                <div id="ads-list" style="margin-top: 20px;"></div>
+            </div>
+
             <!-- TOKENS -->
             <div id="tokens" class="page-view">
-                <div class="section-title">Token Generator</div>
+                <div class="section-title">Token Engine</div>
                 <div class="card">
                     <label>Duration Value</label>
                     <input type="number" id="t-val" class="input-box" value="30">
@@ -100,79 +117,61 @@
                         <option value="hours">Hours</option>
                         <option value="days" selected>Days</option>
                         <option value="weeks">Weeks</option>
-                        <option value="months">Months (30D)</option>
+                        <option value="months">Months</option>
                     </select>
                     <button class="btn btn-red" onclick="generateToken()">GENERATE TOKEN</button>
                 </div>
                 <div id="token-list"></div>
             </div>
 
-            <!-- ADS HUB -->
-            <div id="ads" class="page-view">
-                <div class="section-title">Ads & Social Hub Config</div>
-                <button class="btn btn-red" onclick="openAdForm()">+ Configure Ad Sponsor</button>
-                <div id="ads-list" style="margin-top: 15px;"></div>
-            </div>
-
-            <!-- CONTENT (MEDIA) -->
+            <!-- MEDIA (Channels, Movies, Adult) -->
             <div id="media" class="page-view">
                 <div class="section-title">Manage Content</div>
                 <div style="display: flex; gap: 8px; margin-bottom: 15px;">
                     <button class="btn btn-red btn-sm" onclick="openMediaForm('channels')">+ Channel</button>
                     <button class="btn btn-outline btn-sm" onclick="openMediaForm('movies')">+ Movie</button>
-                    <button class="btn btn-outline btn-sm" onclick="openMediaForm('adult')">+ Adult 18+</button>
+                    <button class="btn btn-outline btn-sm" onclick="openMediaForm('adult')">+ Adult</button>
                 </div>
-                <div class="card"><label>Live Channels</label><div id="list-channels"></div></div>
-                <div class="card"><label>Cinema Movies</label><div id="list-movies"></div></div>
-                <div class="card"><label>Adult (18+)</label><div id="list-adult"></div></div>
+                <div class="card"><label>Channels</label><div id="list-channels"></div></div>
+                <div class="card"><label>Cinema Library</label><div id="list-movies"></div></div>
+                <div class="card"><label>Adult 18+</label><div id="list-adult"></div></div>
             </div>
 
-            <!-- UPDATES (POSTS) -->
-            <div id="posts" class="page-view">
-                <div class="section-title">Tech & Betting Updates</div>
-                <button class="btn btn-red" onclick="openPostForm()">+ Create New Update</button>
-                <div id="post-list" style="margin-top: 15px;"></div>
-            </div>
-
-            <!-- SIMULIZI -->
+            <!-- STORIES (Episodes System) -->
             <div id="stories" class="page-view">
                 <div class="section-title">Simulizi Hub</div>
-                <button class="btn btn-red" onclick="openStoryForm()">+ Create New Hadithi</button>
+                <button class="btn btn-red" onclick="openStoryForm()">+ Create New Story Profile</button>
                 <div id="story-list" style="margin-top: 15px;"></div>
             </div>
-
-            <!-- SLIDER -->
-            <div id="slider" class="page-view">
-                <div class="section-title">Section Sliders</div>
-                <button class="btn btn-red" onclick="openSliderForm()">+ Add Slider Image</button>
-                <div id="slider-list" style="margin-top: 15px;"></div>
-            </div>
-
+            
             <!-- USERS -->
             <div id="users" class="page-view">
-                <div class="section-title">User Management</div>
-                <input type="text" class="input-box" placeholder="Search user email..." onkeyup="searchUser(this.value)">
+                <div class="section-title">User Security Hub</div>
+                <input type="text" class="input-box" placeholder="Search by email..." onkeyup="searchUser(this.value)">
                 <div id="user-list"></div>
             </div>
         </main>
     </div>
 
     <!-- MODALS -->
-    
-    <!-- Ad Modal -->
+
+    <!-- Ad Config Modal -->
     <div id="ad-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Ad Configuration</h3>
-            <label>Sponsor Name</label><input id="ad-name" class="input-box">
-            <label>Ad Image URL</label><input id="ad-media" class="input-box">
-            <label>Marquee Top</label><input id="ad-m-top" class="input-box">
-            <label>Marquee Bottom</label><input id="ad-m-bottom" class="input-box">
-            <div id="soc-hub-box">
-                <label>Social Hub Icons (fa-brands fa-whatsapp | Link)</label>
-                <div class="social-input-group"><input class="input-box s-ico" placeholder="Icon Class"><input class="input-box s-url" placeholder="URL"></div>
+            <h3 class="section-title">Ad Sponsor Setup</h3>
+            <input type="hidden" id="ad-id">
+            <label>Sponsor Name</label><input id="ad-name" class="input-box" placeholder="e.g. SportyBet">
+            <label>Media URL (Image/Video)</label><input id="ad-media" class="input-box">
+            <label>Top Marquee (Moving Text)</label><input id="ad-m-top" class="input-box">
+            <label>Bottom Marquee</label><input id="ad-m-bottom" class="input-box">
+            
+            <div id="social-entries">
+                <label>Social Hub Icons (20+ Icons Support)</label>
+                <!-- Dynamic rows here -->
             </div>
-            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:10px;" onclick="addSocialField()">+ Add Icon</button>
-            <button class="btn btn-red" onclick="saveAd()">SAVE AD HUB</button>
+            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:15px;" onclick="addSocialRow()">+ Add Icon Pair</button>
+            
+            <button class="btn btn-red" onclick="saveAdHub()">SAVE AD CONFIG</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
     </div>
@@ -183,39 +182,25 @@
             <h3 class="section-title" id="m-form-title">Content Details</h3>
             <input type="hidden" id="m-path"><input type="hidden" id="m-id">
             <label>Title</label><input id="m-title" class="input-box">
-            <label>URL / Link</label><input id="m-url" class="input-box">
-            <label>Poster URL</label><input id="m-poster" class="input-box">
-            <div id="drm-section" class="hidden">
-                <label style="color:var(--red)">DRM SYSTEM</label>
+            <label>URL / Stream Link</label><input id="m-url" class="input-box">
+            <label>Poster / Logo URL</label><input id="m-logo" class="input-box">
+            <div id="drm-box" class="hidden">
+                <label style="color:var(--red)">DRM SECURITY</label>
                 <input id="m-lic" class="input-box" placeholder="License URL">
-                <input id="m-token" class="input-box" placeholder="Token">
+                <input id="m-token" class="input-box" placeholder="Bearer Token">
             </div>
             <button class="btn btn-red" onclick="saveMedia()">SAVE DATA</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
     </div>
 
-    <!-- Post Modal -->
-    <div id="post-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="section-title">Manage Post</h3>
-            <input type="hidden" id="p-id">
-            <label>Section</label>
-            <select id="p-cat" class="input-box"><option value="tech">Tech Updates</option><option value="betting">Betting Tips</option></select>
-            <label>Title / Match Name</label><input id="p-title" class="input-box">
-            <label>Details / Prediction</label><textarea id="p-body" class="input-box" style="height:100px"></textarea>
-            <button class="btn btn-red" onclick="savePost()">POST UPDATE</button>
-            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
-        </div>
-    </div>
-
-    <!-- Story Part Modal -->
+    <!-- Episode Modal -->
     <div id="ep-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Episode Content</h3>
+            <h3 class="section-title">Add / Edit Episode</h3>
             <input type="hidden" id="ep-sid"><input type="hidden" id="ep-id">
-            <label>Part Title</label><input id="ep-title" class="input-box" placeholder="Part 1">
-            <label>Maandishi</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
+            <label>Episode Title (e.g Part 1)</label><input id="ep-title" class="input-box">
+            <label>Episode Content (Text)</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
             <button class="btn btn-red" onclick="saveEpisode()">SAVE PART</button>
             <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
         </div>
@@ -246,85 +231,91 @@
             if(id === 'dash') loadDash();
             if(id === 'tokens') loadTokens();
             if(id === 'ads') loadAds();
-            if(id === 'media') { loadList('channels', 'list-channels'); loadList('movies', 'list-movies'); loadList('adult', 'list-adult'); }
-            if(id === 'posts') loadPosts();
+            if(id === 'media') { loadList('channels','list-channels'); loadList('movies','list-movies'); loadList('adult','list-adult'); }
             if(id === 'stories') loadStories();
-            if(id === 'slider') loadSliders();
             if(id === 'users') loadUsers();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); clearForms(); }
-        function clearForms() { document.querySelectorAll('.input-box').forEach(i => i.value = ''); document.querySelectorAll('input[type="hidden"]').forEach(h => h.value = ''); }
-
-        // --- TOKEN SYSTEM ---
-        function generateToken() {
-            const v = document.getElementById('t-val').value, u = document.getElementById('t-unit').value;
-            const tok = "STANY-" + Math.random().toString(36).substr(2, 7).toUpperCase();
-            let ms = 0;
-            if(u==='seconds') ms=v*1000; if(u==='minutes') ms=v*60000; if(u==='hours') ms=v*3600000;
-            if(u==='days') ms=v*86400000; if(u==='weeks') ms=v*604800000; if(u==='months') ms=v*2592000000;
-            
-            // Format duration for display
-            const durationLabel = `${v} ${u}`;
-            
-            db.ref('tokens/'+tok).set({ token: tok, durationMs: ms, label: durationLabel, status: 'unused', createdAt: Date.now() })
-            .then(() => alert("Token Created!"));
+        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); clearAll(); }
+        function clearAll() { 
+            document.querySelectorAll('.input-box').forEach(i => i.value = ''); 
+            document.getElementById('social-entries').innerHTML = ''; 
+            document.querySelectorAll('input[type="hidden"]').forEach(h => h.value = '');
         }
 
-        function loadTokens() {
-            db.ref('tokens').on('value', s => {
-                const l = document.getElementById('token-list'); l.innerHTML = '';
-                s.forEach(c => {
-                    const t = c.val(); const used = t.status === 'used';
-                    l.innerHTML += `<div class="item-row ${used?'tok-used':'tok-card'}">
-                        <div class="item-info">
-                            <b>${t.token} <i class="fas fa-copy" style="margin-left:10px" onclick="navigator.clipboard.writeText('${t.token}'); alert('Token Copied')"></i></b>
-                            <small>Muda: ${t.label || '---'}</small>
-                            ${used ? `<small style="color:#44ff44">Used by: ${t.usedByName} (${t.usedByEmail})</small>` : ''}
-                        </div>
-                        <i class="fas fa-trash" onclick="del('tokens/${c.key}')"></i>
-                    </div>`;
-                });
-            });
+        // --- ADS HUB ENGINE ---
+        function openAdForm() { openModal('ad-modal'); }
+
+        function addSocialRow(icon = '', url = '') {
+            const div = document.createElement('div'); div.className = 'social-entry';
+            div.innerHTML = `
+                <input class="input-box s-ico" value="${icon}" placeholder="fa-brands fa-whatsapp" style="margin:0; width:40%">
+                <input class="input-box s-url" value="${url}" placeholder="URL" style="margin:0; width:50%">
+                <i class="fas fa-minus-circle" onclick="this.parentElement.remove()"></i>
+            `;
+            document.getElementById('social-entries').appendChild(div);
         }
 
-        // --- ADS HUB ---
-        function addSocialField() {
-            const div = document.createElement('div'); div.className = 'social-input-group';
-            div.innerHTML = `<input class="input-box s-ico" placeholder="fa-brands fa-telegram"><input class="input-box s-url" placeholder="URL">`;
-            document.getElementById('soc-hub-box').appendChild(div);
-        }
-        function saveAd() {
-            const soc = []; document.querySelectorAll('.social-input-group').forEach(r => {
+        function saveAdHub() {
+            const soc = []; document.querySelectorAll('.social-entry').forEach(r => {
                 const i = r.querySelector('.s-ico').value, u = r.querySelector('.s-url').value;
-                if(i) soc.push({ icon: i, url: u });
+                if(i && u) soc.push({ icon: i, url: u });
             });
-            const data = { name: document.getElementById('ad-name').value, image: document.getElementById('ad-media').value, marqueeTop: document.getElementById('ad-m-top').value, marqueeBottom: document.getElementById('ad-m-bottom').value, social: soc };
-            db.ref('ads/config').set(data).then(() => closeModal());
+            const data = {
+                name: document.getElementById('ad-name').value,
+                image: document.getElementById('ad-media').value,
+                marqueeTop: document.getElementById('ad-m-top').value,
+                marqueeBottom: document.getElementById('ad-m-bottom').value,
+                social: soc
+            };
+            db.ref('ads/config').set(data).then(() => { closeModal(); alert("Ad Hub Updated!"); });
         }
+
         function loadAds() {
             db.ref('ads/config').on('value', s => {
-                const l = document.getElementById('ads-list');
-                if(!s.exists()) { l.innerHTML = "No active ad sponsor."; return; }
+                const l = document.getElementById('ads-list'); l.innerHTML = '';
+                if(!s.exists()) return;
                 const v = s.val();
-                l.innerHTML = `<div class="item-row"><b>Active: ${v.name}</b><i class="fas fa-trash" onclick="del('ads/config')"></i></div>`;
+                l.innerHTML = `
+                    <div class="item-row">
+                        <div class="item-info"><b>Sponsor: ${v.name}</b><small>Social Icons: ${v.social ? v.social.length : 0}</small></div>
+                        <div class="actions">
+                            <i class="fas fa-edit" onclick="editAdHub()"></i>
+                            <i class="fas fa-trash" onclick="del('ads/config')"></i>
+                        </div>
+                    </div>`;
             });
         }
 
-        // --- MEDIA CRUD ---
+        function editAdHub() {
+            db.ref('ads/config').once('value', s => {
+                const v = s.val();
+                document.getElementById('ad-name').value = v.name;
+                document.getElementById('ad-media').value = v.image;
+                document.getElementById('ad-m-top').value = v.marqueeTop;
+                document.getElementById('ad-m-bottom').value = v.marqueeBottom;
+                if(v.social) v.social.forEach(row => addSocialRow(row.icon, row.url));
+                openModal('ad-modal');
+            });
+        }
+
+        // --- MEDIA CRUD (FULL) ---
         function openMediaForm(path) {
             document.getElementById('m-path').value = path;
-            document.getElementById('drm-section').className = path === 'channels' ? '' : 'hidden';
+            document.getElementById('m-form-title').innerText = "New " + path.toUpperCase();
+            document.getElementById('drm-box').className = path === 'channels' ? '' : 'hidden';
             openModal('media-modal');
         }
+
         function saveMedia() {
             const p = document.getElementById('m-path').value, id = document.getElementById('m-id').value;
-            const data = { title: document.getElementById('m-title').value, url: document.getElementById('m-url').value, poster: document.getElementById('m-poster').value };
+            const data = { title: document.getElementById('m-title').value, url: document.getElementById('m-url').value, poster: document.getElementById('m-logo').value };
             if(p==='channels') { data.licUrl = document.getElementById('m-lic').value; data.token = document.getElementById('m-token').value; }
             const ref = id ? db.ref(p+'/'+id) : db.ref(p).push();
-            ref.set(data).then(() => closeModal());
+            ref.set(data).then(() => { closeModal(); alert("Content Saved!"); });
         }
+
         function loadList(path, elId) {
             db.ref(path).on('value', s => {
                 const l = document.getElementById(elId); l.innerHTML = '';
@@ -337,80 +328,104 @@
                 });
             });
         }
+
         function editMedia(p, id) {
             db.ref(p+'/'+id).once('value', s => {
-                const v = s.val(); document.getElementById('m-path').value = p; document.getElementById('m-id').value = id;
+                const v = s.val(); document.getElementById('m-id').value = id; document.getElementById('m-path').value = p;
                 document.getElementById('m-title').value = v.title; document.getElementById('m-url').value = v.url; document.getElementById('m-poster').value = v.poster;
-                if(p==='channels') { document.getElementById('m-lic').value = v.licUrl || ''; document.getElementById('m-token').value = v.token || ''; }
+                if(p==='channels') { document.getElementById('m-lic').value = v.licUrl||''; document.getElementById('m-token').value = v.token||''; }
                 openMediaForm(p);
             });
         }
 
-        // --- UPDATES (POSTS) ---
-        function openPostForm() { openModal('post-modal'); }
-        function savePost() {
-            const id = document.getElementById('p-id').value;
-            const data = { category: document.getElementById('p-cat').value, title: document.getElementById('p-title').value, body: document.getElementById('p-body').value, time: Date.now() };
-            const ref = id ? db.ref('posts/'+id) : db.ref('posts').push();
-            ref.set(data).then(() => closeModal());
+        // --- TOKEN ENGINE ---
+        function generateToken() {
+            const v = document.getElementById('t-val').value, u = document.getElementById('t-unit').value;
+            const tok = "STANY-" + Math.random().toString(36).substr(2, 7).toUpperCase();
+            let ms = 0;
+            if(u==='seconds') ms=v*1000; if(u==='minutes') ms=v*60000; if(u==='hours') ms=v*3600000;
+            if(u==='days') ms=v*86400000; if(u==='weeks') ms=v*604800000; if(u==='months') ms=v*2592000000;
+            db.ref('tokens/'+tok).set({ token: tok, durationMs: ms, durationLabel: v+' '+u, status: 'unused', createdAt: Date.now() })
+            .then(() => alert("Token: "+tok));
         }
-        function loadPosts() {
-            db.ref('posts').on('value', s => {
-                const l = document.getElementById('post-list'); l.innerHTML = '';
+
+        function loadTokens() {
+            db.ref('tokens').on('value', s => {
+                const l = document.getElementById('token-list'); l.innerHTML = '';
                 s.forEach(c => {
-                    const v = c.val();
-                    l.innerHTML += `<div class="item-row"><b>[${v.category}] ${v.title}</b><div class="actions"><i class="fas fa-edit" onclick="editPost('${c.key}')"></i><i class="fas fa-trash" onclick="del('posts/${c.key}')"></i></div></div>`;
+                    const t = c.val(); const used = t.status === 'used';
+                    l.innerHTML += `<div class="item-row ${used?'tok-used':'tok-card'}">
+                        <div class="item-info">
+                            <b>${t.token} <i class="fas fa-copy" style="margin-left:10px" onclick="navigator.clipboard.writeText('${t.token}'); alert('Token Copied')"></i></b>
+                            <small>Duration: ${t.durationLabel || '---'}</small>
+                            ${used ? `<small style="color:#44ff44">Used by: ${t.usedByName} (${t.usedByEmail})</small>` : ''}
+                        </div>
+                        <i class="fas fa-trash" onclick="del('tokens/${c.key}')"></i>
+                    </div>`;
                 });
             });
         }
-        function editPost(id) {
-            db.ref('posts/'+id).once('value', s => {
-                const v = s.val(); document.getElementById('p-id').value = id; document.getElementById('p-cat').value = v.category;
-                document.getElementById('p-title').value = v.title; document.getElementById('p-body').value = v.body; openModal('post-modal');
-            });
-        }
 
-        // --- SIMULIZI ---
-        function openStoryForm() {
-            document.getElementById('m-path').value = 'simulizi';
-            document.getElementById('drm-section').className = 'hidden';
-            openModal('media-modal');
-        }
+        // --- STORIES & EPISODES ---
+        function openStoryForm() { document.getElementById('m-path').value = 'simulizi'; openModal('media-modal'); }
         function loadStories() {
             db.ref('simulizi').on('value', s => {
                 const l = document.getElementById('story-list'); l.innerHTML = '';
                 s.forEach(c => {
                     l.innerHTML += `<div class="card">
-                        <div style="display:flex; justify-content:space-between"><b>${c.val().title}</b><button class="btn btn-outline btn-sm" onclick="openEpForm('${c.key}')">+ EPISODE</button></div>
-                        <div id="eps-${c.key}" style="margin-top:10px; opacity:0.6"></div>
-                        <div class="actions" style="margin-top:10px; justify-content:flex-end"><i class="fas fa-trash" onclick="del('simulizi/${c.key}')"></i></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <b>${c.val().title}</b>
+                            <button class="btn btn-outline btn-sm" onclick="openEpForm('${c.key}')">+ PART</button>
+                        </div>
+                        <div id="ep-list-${c.key}" style="margin-top:10px; opacity:0.6"></div>
+                        <div class="actions" style="margin-top:10px; justify-content:flex-end;">
+                            <i class="fas fa-edit" onclick="editMedia('simulizi','${c.key}')"></i>
+                            <i class="fas fa-trash" onclick="del('simulizi/${c.key}')"></i>
+                        </div>
                     </div>`;
                     db.ref(`simulizi/${c.key}/parts`).on('value', ps => {
-                        const box = document.getElementById('eps-'+c.key); if(!box) return; box.innerHTML = '';
-                        ps.forEach(p => box.innerHTML += `<div style="font-size:10px">• ${p.val().title} <i class="fas fa-times" style="color:red" onclick="del('simulizi/${c.key}/parts/${p.key}')"></i></div>`);
+                        const box = document.getElementById('ep-list-'+c.key); if(!box) return; box.innerHTML = '';
+                        ps.forEach(p => box.innerHTML += `<div style="font-size:10px">• ${p.val().title} <i class="fas fa-edit" onclick="editEp('${c.key}','${p.key}')"></i></div>`);
                     });
                 });
             });
         }
         function openEpForm(sid) { document.getElementById('ep-sid').value = sid; openModal('ep-modal'); }
         function saveEpisode() {
-            const sid = document.getElementById('ep-sid').value;
-            db.ref(`simulizi/${sid}/parts`).push({ title: document.getElementById('ep-title').value, body: document.getElementById('ep-body').value }).then(() => closeModal());
+            const sid = document.getElementById('ep-sid').value, eid = document.getElementById('ep-id').value;
+            const ref = eid ? db.ref(`simulizi/${sid}/parts/${eid}`) : db.ref(`simulizi/${sid}/parts`).push();
+            ref.set({ title: document.getElementById('ep-title').value, body: document.getElementById('ep-body').value }).then(() => closeModal());
         }
 
-        // --- DASHBOARD ---
+        // --- USERS ---
+        function loadUsers() {
+            db.ref('users').on('value', s => {
+                const l = document.getElementById('user-list'); l.innerHTML = '';
+                s.forEach(c => {
+                    const u = c.val();
+                    l.innerHTML += `<div class="item-row" style="flex-direction:column; align-items:flex-start;">
+                        <b>${u.email}</b><small>HWID: ${u.hwid || '---'} | PASS: ${u.password || '---'}</small>
+                        <div style="display:flex; gap:10px; margin-top:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="db.ref('users/${c.key}/hwid').remove(); alert('Unlocked')">Reset HWID</button>
+                            <button class="btn btn-outline btn-sm" style="color:red" onclick="del('users/${c.key}')">Delete</button>
+                        </div>
+                    </div>`;
+                });
+            });
+        }
+
+        // Helpers
         function loadDash() {
             db.ref('users').on('value', s => document.getElementById('st-users').innerText = s.numChildren());
             db.ref('channels').on('value', s => document.getElementById('st-channels').innerText = s.numChildren());
             db.ref('simulizi').on('value', s => document.getElementById('st-stories').innerText = s.numChildren());
-            db.ref('tokens').on('value', s => { let c=0; s.forEach(x => { if(x.val().status==='used') c++; }); document.getElementById('st-tokens').innerText = c; });
+            db.ref('tokens').on('value', s => { let c=0; s.forEach(x=>{ if(x.val().status==='used') c++; }); document.getElementById('st-tokens').innerText = c; });
         }
+        function del(p) { if(confirm("Confirm?")) db.ref(p).remove(); }
 
-        function del(p) { if(confirm("Confirm Delete?")) db.ref(p).remove(); }
-        
-        auth.onAuthStateChanged(u => {
-            if(!u) {
-                const e = prompt("Admin Email:"), p = prompt("Password:");
+        auth.onAuthStateChanged(user => {
+            if(!user) {
+                const e = prompt("Admin Email:"); const p = prompt("Password:");
                 auth.signInWithEmailAndPassword(e, p).catch(() => location.reload());
             } else { switchTab('dash', null); }
         });
