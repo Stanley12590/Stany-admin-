@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STANY MIN ADMIN | SUPREME CONTROL</title>
+    <title>STANY MIN ADMIN | SUPREME HUB</title>
     
-    <!-- Professional Icons & Fonts -->
+    <!-- Professional Resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -20,19 +20,19 @@
             --black: #000000;
             --white: #FFFFFF;
             --card: #121212;
-            --border: #262626;
-            --input: #080808;
+            --border: #222;
+            --input: #0A0A0A;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 12px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; font-size: 12px; -webkit-tap-highlight-color: transparent; }
         body { background: var(--black); color: var(--white); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        header { height: 55px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        .brand { font-size: 14px; font-weight: 800; color: var(--red); letter-spacing: 1px; }
+        /* --- Header --- */
+        header { height: 55px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .brand { font-size: 14px; font-weight: 800; color: var(--red); letter-spacing: 1.5px; }
 
+        /* --- Layout --- */
         #container { flex: 1; display: flex; overflow: hidden; }
-
-        /* --- Sidebar Navigation --- */
         nav { width: 75px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 15px; overflow-y: auto; }
         .nav-link { color: #555; font-size: 18px; cursor: pointer; transition: 0.3s; text-align: center; width: 100%; padding: 5px 0; }
         .nav-link.active { color: var(--red); border-right: 3px solid var(--red); }
@@ -41,76 +41,84 @@
         /* --- Main Content --- */
         main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
         .page-view { display: none; }
-        .active-view { display: block; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .active-view { display: block; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
-        .section-title { font-weight: 700; color: var(--red); margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 10px; }
+        /* --- Components --- */
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; }
+        .section-title { font-weight: 700; color: var(--red); margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid var(--red); padding-left: 10px; }
         
-        label { display: block; color: #888; margin-bottom: 4px; font-size: 10px; }
-        .input-box { width: 100%; padding: 10px; background: var(--input); border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 10px; }
+        label { display: block; color: #888; margin-bottom: 5px; font-size: 10px; }
+        .input-box { width: 100%; padding: 12px; background: var(--input); border: 1px solid var(--border); color: white; border-radius: 10px; margin-bottom: 10px; }
         .input-box:focus { border-color: var(--red); outline: none; }
 
-        .btn { padding: 10px 15px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+        .btn { padding: 10px 15px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
         .btn-red { background: var(--red); color: white; width: 100%; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: white; }
-        .btn-sm { padding: 5px 10px; font-size: 10px; border-radius: 6px; }
+        .btn-sm { padding: 5px 10px; font-size: 9px; border-radius: 6px; }
 
-        /* --- List Display --- */
+        /* --- List Elements --- */
         .item-row { background: var(--input); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border: 1px solid var(--border); }
         .item-info { flex: 1; }
         .item-info b { font-size: 13px; color: var(--white); display: block; }
-        .actions { display: flex; gap: 12px; }
+        .item-info small { color: #666; font-size: 10px; }
+        .actions { display: flex; gap: 15px; }
         .actions i { cursor: pointer; font-size: 15px; }
         .fa-trash { color: #ff4444; }
         .fa-edit { color: #44ff44; }
+
+        /* --- Tokens --- */
+        .tok-card { border-left: 5px solid var(--red); }
+        .tok-used { border-left-color: #333; opacity: 0.5; }
 
         /* --- Modals --- */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card); border: 1px solid var(--red); width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; }
 
-        .social-input-row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .social-input-group { display: flex; gap: 5px; margin-bottom: 8px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">STANY MIN ADMIN | MASTER</div>
-        <div id="conn-status" style="font-size: 9px; color: #44ff44;"><i class="fas fa-circle"></i> CONNECTED</div>
+        <div class="brand">STANY MIN ADMIN PRO</div>
+        <div id="conn-info" style="font-size: 9px; color: #44ff44;"><i class="fas fa-circle"></i> HUB CONNECTED</div>
     </header>
 
     <div id="container">
+        <!-- Navigation Hub -->
         <nav>
-            <div class="nav-link active" onclick="switchView('dash', this)"><i class="fas fa-chart-pie"></i><span>Dash</span></div>
-            <div class="nav-link" onclick="switchView('tokens', this)"><i class="fas fa-key"></i><span>Tokens</span></div>
-            <div class="nav-link" onclick="switchView('ads', this)"><i class="fas fa-ad"></i><span>Ads Hub</span></div>
-            <div class="nav-link" onclick="switchView('media', this)"><i class="fas fa-tv"></i><span>Media</span></div>
-            <div class="nav-link" onclick="switchView('slider', this)"><i class="fas fa-images"></i><span>Sliders</span></div>
-            <div class="nav-link" onclick="switchView('stories', this)"><i class="fas fa-book"></i><span>Simulizi</span></div>
-            <div class="nav-link" onclick="switchView('updates', this)"><i class="fas fa-rss"></i><span>Updates</span></div>
-            <div class="nav-link" onclick="switchView('users', this)"><i class="fas fa-users-cog"></i><span>Users</span></div>
+            <div class="nav-link active" onclick="switchTab('dash', this)"><i class="fas fa-chart-pie"></i><span>Dash</span></div>
+            <div class="nav-link" onclick="switchTab('tokens', this)"><i class="fas fa-key"></i><span>Tokens</span></div>
+            <div class="nav-link" onclick="switchTab('ads', this)"><i class="fas fa-ad"></i><span>Ads Hub</span></div>
+            <div class="nav-link" onclick="switchTab('media', this)"><i class="fas fa-play-circle"></i><span>Content</span></div>
+            <div class="nav-link" onclick="switchTab('slider', this)"><i class="fas fa-images"></i><span>Sliders</span></div>
+            <div class="nav-link" onclick="switchTab('stories', this)"><i class="fas fa-book"></i><span>Simulizi</span></div>
+            <div class="nav-link" onclick="switchTab('posts', this)"><i class="fas fa-rss"></i><span>Updates</span></div>
+            <div class="nav-link" onclick="switchTab('users', this)"><i class="fas fa-users-cog"></i><span>Users</span></div>
         </nav>
 
         <main>
             <!-- 1. DASHBOARD -->
             <div id="dash" class="page-view active-view">
-                <div class="section-title">App Statistics</div>
+                <div class="section-title">Overview Statistics</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="card"><label>Total Users</label><h2 id="st-users">0</h2></div>
-                    <div class="card"><label>Used Tokens</label><h2 id="st-tokens">0</h2></div>
                     <div class="card"><label>Live Channels</label><h2 id="st-channels">0</h2></div>
+                    <div class="card"><label>Used Tokens</label><h2 id="st-tokens">0</h2></div>
                     <div class="card"><label>Stories</label><h2 id="st-stories">0</h2></div>
                 </div>
             </div>
 
-            <!-- 2. TOKENS -->
+            <!-- 2. TOKEN ENGINE -->
             <div id="tokens" class="page-view">
-                <div class="section-title">Token Generator & Tracker</div>
+                <div class="section-title">Token Generator</div>
                 <div class="card">
                     <label>Duration Value</label>
-                    <input type="number" id="tok-val" class="input-box" value="30">
-                    <label>Unit</label>
-                    <select id="tok-unit" class="input-box">
+                    <input type="number" id="t-val" class="input-box" value="30">
+                    <label>Duration Unit</label>
+                    <select id="t-unit" class="input-box">
                         <option value="seconds">Seconds</option>
                         <option value="minutes">Minutes</option>
                         <option value="hours">Hours</option>
@@ -118,7 +126,7 @@
                         <option value="weeks">Weeks</option>
                         <option value="months">Months (30D)</option>
                     </select>
-                    <button class="btn btn-red" onclick="generateToken()">GENERATE TOKEN</button>
+                    <button class="btn btn-red" onclick="generateToken()">GENERATE SECURE TOKEN</button>
                 </div>
                 <div id="token-list"></div>
             </div>
@@ -126,27 +134,27 @@
             <!-- 3. ADS HUB -->
             <div id="ads" class="page-view">
                 <div class="section-title">Ultimate Ad Config</div>
-                <button class="btn btn-red" onclick="openAdForm()">+ Create Sponsor Ad</button>
+                <button class="btn btn-red" onclick="openAdModal()">+ Add Sponsor Ad</button>
                 <div id="ads-list" style="margin-top: 15px;"></div>
             </div>
 
-            <!-- 4. MEDIA (LIVE, MOVIES, ADULT) -->
+            <!-- 4. MEDIA CONTENT (CRUD) -->
             <div id="media" class="page-view">
-                <div class="section-title">Media Content (CRUD)</div>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div class="section-title">Media Management</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 15px;">
                     <button class="btn btn-red btn-sm" onclick="openMediaForm('channels')">+ Channel</button>
                     <button class="btn btn-outline btn-sm" onclick="openMediaForm('movies')">+ Movie</button>
                     <button class="btn btn-outline btn-sm" onclick="openMediaForm('adult')">+ Adult 18+</button>
                 </div>
                 <div class="card"><label>Channels</label><div id="list-channels"></div></div>
-                <div class="card"><label>Movies</label><div id="list-movies"></div></div>
-                <div class="card"><label>Adult (18+)</label><div id="list-adult"></div></div>
+                <div class="card"><label>Cinema Library</label><div id="list-movies"></div></div>
+                <div class="card"><label>Adult Content</label><div id="list-adult"></div></div>
             </div>
 
-            <!-- 5. SLIDERS (DYNAMIC) -->
+            <!-- 5. SLIDERS -->
             <div id="slider" class="page-view">
                 <div class="section-title">Section Carousels</div>
-                <button class="btn btn-red" onclick="openSliderForm()">+ Add Sliding Image</button>
+                <button class="btn btn-red" onclick="openSliderForm()">+ Add New Carousel</button>
                 <div id="slider-list" style="margin-top: 15px;"></div>
             </div>
 
@@ -158,15 +166,15 @@
             </div>
 
             <!-- 7. UPDATES -->
-            <div id="updates" class="page-view">
-                <div class="section-title">Tech & Betting Post</div>
-                <button class="btn btn-red" onclick="openPostForm()">+ Add New Update</button>
+            <div id="posts" class="page-view">
+                <div class="section-title">Tech & Betting Updates</div>
+                <button class="btn btn-red" onclick="openPostForm()">+ Add New Post</button>
                 <div id="post-list" style="margin-top: 15px;"></div>
             </div>
 
             <!-- 8. USERS -->
             <div id="users" class="page-view">
-                <div class="section-title">User Security (HWID)</div>
+                <div class="section-title">User Control & HWID</div>
                 <input type="text" class="input-box" placeholder="Search by email..." onkeyup="searchUser(this.value)">
                 <div id="user-list"></div>
             </div>
@@ -175,72 +183,72 @@
 
     <!-- --- MODALS --- -->
 
-    <!-- Ad Modal -->
+    <!-- Ad Form -->
     <div id="ad-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Manage Ad</h3>
+            <h3 class="section-title">Sponsor Configuration</h3>
             <input type="hidden" id="ad-id">
-            <label>Sponsor Name</label><input id="ad-sponsor" class="input-box">
+            <label>Sponsor Name</label><input id="ad-name" class="input-box">
             <label>Media URL (Image/Video)</label><input id="ad-media" class="input-box">
-            <label>Marquee Top Text</label><input id="ad-marquee-top" class="input-box">
-            <label>Marquee Bottom Text</label><input id="ad-marquee-bottom" class="input-box">
-            <div id="social-hub-box">
-                <label>Social Hub Icons (Icon | URL)</label>
+            <label>Marquee Top Text</label><input id="ad-m-top" class="input-box">
+            <label>Marquee Bottom Text</label><input id="ad-m-bottom" class="input-box">
+            <div id="soc-hub-box">
+                <label>Social Icons (fa-brands fa-whatsapp | URL)</label>
                 <div class="social-input-row"><input class="input-box s-ico" placeholder="Icon Class"><input class="input-box s-url" placeholder="URL"></div>
             </div>
-            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:10px;" onclick="addSocialField()">+ Add Icon Field</button>
+            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:10px;" onclick="addSocialRow()">+ Add Icon</button>
             <button class="btn btn-red" onclick="saveAd()">SAVE AD</button>
-            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
+            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeAllModals()">CANCEL</button>
         </div>
     </div>
 
-    <!-- Media Modal -->
+    <!-- Media Form -->
     <div id="media-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title" id="media-title">Manage Media</h3>
+            <h3 class="section-title" id="media-form-title">Content Details</h3>
             <input type="hidden" id="media-path">
             <input type="hidden" id="media-id">
-            <label>Title / Name</label><input id="m-name" class="input-box">
+            <label>Name / Title</label><input id="m-name" class="input-box">
             <label>Stream URL</label><input id="m-url" class="input-box">
-            <label>Poster / Logo URL</label><input id="m-poster" class="input-box">
-            <div id="drm-box">
-                <label style="color:var(--red)">DRM LICENSE (Optional)</label>
+            <label>Poster / Logo URL</label><input id="m-logo" class="input-box">
+            <div id="drm-section" style="border: 1px solid #333; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
+                <label style="color:var(--red)">DRM SECURITY (Optional)</label>
                 <input id="m-lic" class="input-box" placeholder="License URL">
-                <input id="m-token" class="input-box" placeholder="Bearer Token">
+                <input id="m-token" class="input-box" placeholder="Bearer Token ID">
             </div>
-            <button class="btn btn-red" onclick="saveMedia()">SAVE CONTENT</button>
-            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
+            <button class="btn btn-red" onclick="saveMedia()">SAVE DATA</button>
+            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeAllModals()">CANCEL</button>
         </div>
     </div>
 
-    <!-- Slider Modal -->
-    <div id="slider-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="section-title">Add Slider Image</h3>
-            <input type="hidden" id="sl-id">
-            <label>Assign to Section</label>
-            <select id="sl-section" class="input-box">
-                <option value="live">Live Channels Page</option>
-                <option value="movie">Movies Page</option>
-                <option value="adult">Adult 18+ Page</option>
-            </select>
-            <label>Image URL</label><input id="sl-img" class="input-box">
-            <label>Action URL (Optional)</label><input id="sl-action" class="input-box">
-            <button class="btn btn-red" onclick="saveSlider()">SAVE SLIDER</button>
-            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
-        </div>
-    </div>
-
-    <!-- Episode Modal -->
+    <!-- Story/Episode Form -->
     <div id="ep-modal" class="modal">
         <div class="modal-content">
-            <h3 class="section-title">Add Story Episode</h3>
+            <h3 class="section-title">Episode Details</h3>
             <input type="hidden" id="ep-sid">
             <input type="hidden" id="ep-id">
             <label>Part Title (e.g Part 1)</label><input id="ep-title" class="input-box">
-            <label> Maandishi (Story Body)</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
+            <label>Maandishi (Story Body)</label><textarea id="ep-body" class="input-box" style="height:200px"></textarea>
             <button class="btn btn-red" onclick="saveEpisode()">SAVE PART</button>
-            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeModal()">CANCEL</button>
+            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeAllModals()">CANCEL</button>
+        </div>
+    </div>
+
+    <!-- Slider Form -->
+    <div id="slider-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="section-title">Carousel Image</h3>
+            <input type="hidden" id="sl-id">
+            <label>Section</label>
+            <select id="sl-section" class="input-box">
+                <option value="live">Live TV Page</option>
+                <option value="movies">Movies Page</option>
+                <option value="adult">Adult 18+ Page</option>
+            </select>
+            <label>Image URL</label><input id="sl-img" class="input-box">
+            <label>Target URL (Optional)</label><input id="sl-action" class="input-box">
+            <button class="btn btn-red" onclick="saveSlider()">SAVE SLIDE</button>
+            <button class="btn btn-outline" style="width:100%; margin-top:5px;" onclick="closeAllModals()">CANCEL</button>
         </div>
     </div>
 
@@ -261,7 +269,7 @@
         const auth = firebase.auth();
 
         // --- NAVIGATION ---
-        function switchView(id, el) {
+        function switchTab(id, el) {
             document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active-view'));
             document.getElementById(id).classList.add('active-view');
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -271,18 +279,22 @@
             if(id === 'tokens') loadTokens();
             if(id === 'ads') loadAds();
             if(id === 'media') { loadList('channels', 'list-channels'); loadList('movies', 'list-movies'); loadList('adult', 'list-adult'); }
-            if(id === 'slider') loadSlider();
+            if(id === 'slider') loadSliders();
             if(id === 'stories') loadStories();
+            if(id === 'posts') loadList('posts', 'post-list');
             if(id === 'users') loadUsers();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); clearInputs(); }
-        function clearInputs() { document.querySelectorAll('.input-box').forEach(i => i.value = ''); document.querySelectorAll('input[type="hidden"]').forEach(h => h.value = ''); }
+        function closeAllModals() { 
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
+            document.querySelectorAll('.input-box').forEach(i => i.value = '');
+            document.querySelectorAll('input[type="hidden"]').forEach(h => h.value = '');
+        }
 
         // --- TOKEN SYSTEM ---
         function generateToken() {
-            const v = document.getElementById('tok-val').value, u = document.getElementById('tok-unit').value;
+            const v = document.getElementById('t-val').value, u = document.getElementById('t-unit').value;
             const token = "STANY-" + Math.random().toString(36).substr(2, 7).toUpperCase();
             let ms = 0;
             if(u==='seconds') ms=v*1000; if(u==='minutes') ms=v*60000; if(u==='hours') ms=v*3600000;
@@ -292,36 +304,15 @@
 
         function loadTokens() {
             db.ref('tokens').on('value', s => {
-                const l = document.getElementById('token-list'); l.innerHTML = '';
+                const list = document.getElementById('token-list'); list.innerHTML = '';
                 s.forEach(c => {
                     const t = c.val(); const used = t.status === 'used';
-                    l.innerHTML += `<div class="item-row ${used?'token-used':''}" style="border-left:4px solid ${used?'#333':'red'}">
+                    list.innerHTML += `<div class="item-row ${used?'tok-used':''}" style="border-left:4px solid ${used?'#333':'red'}">
                         <div class="item-info">
                             <b>${t.token}</b> <i class="fas fa-copy" style="margin-left:8px; cursor:pointer" onclick="navigator.clipboard.writeText('${t.token}'); alert('Copied')"></i>
-                            ${used ? `<small style="color:#44ff44; display:block">Used by: ${t.usedByName} (${t.usedByEmail})</small>` : ''}
+                            ${used ? `<small style="color:#44ff44; display:block">Used by: ${t.usedByName || 'Unknown'} (${t.usedByEmail || ''})</small>` : ''}
                         </div>
                         <i class="fas fa-trash" onclick="del('tokens/${c.key}')"></i>
-                    </div>`;
-                });
-            });
-        }
-
-        // --- SLIDER ENGINE ---
-        function openSliderForm() { openModal('slider-modal'); }
-        function saveSlider() {
-            const id = document.getElementById('sl-id').value;
-            const data = { section: document.getElementById('sl-section').value, image: document.getElementById('sl-img').value, action: document.getElementById('sl-action').value };
-            const ref = id ? db.ref('carousels/'+id) : db.ref('carousels').push();
-            ref.set(data).then(() => closeModal());
-        }
-        function loadSlider() {
-            db.ref('carousels').on('value', s => {
-                const l = document.getElementById('slider-list'); l.innerHTML = '';
-                s.forEach(c => {
-                    const v = c.val();
-                    l.innerHTML += `<div class="item-row">
-                        <div class="item-info"><b>Section: ${v.section.toUpperCase()}</b><small>${v.image.substring(0,30)}...</small></div>
-                        <div class="actions"><i class="fas fa-trash" onclick="del('carousels/${c.key}')"></i></div>
                     </div>`;
                 });
             });
@@ -330,31 +321,27 @@
         // --- MEDIA CRUD ---
         function openMediaForm(path) {
             document.getElementById('media-path').value = path;
-            document.getElementById('media-title').innerText = "Add " + path.toUpperCase();
-            document.getElementById('drm-box').style.display = path === 'channels' ? 'block' : 'none';
+            document.getElementById('drm-section').style.display = path === 'channels' ? 'block' : 'none';
             openModal('media-modal');
         }
 
         function saveMedia() {
             const path = document.getElementById('media-path').value;
             const id = document.getElementById('media-id').value;
-            const data = { name: document.getElementById('m-name').value, url: document.getElementById('m-url').value, logo: document.getElementById('m-poster').value };
+            const data = { name: document.getElementById('m-name').value, url: document.getElementById('m-url').value, logo: document.getElementById('m-logo').value };
             if(path === 'channels') { data.licUrl = document.getElementById('m-lic').value; data.token = document.getElementById('m-token').value; }
             const ref = id ? db.ref(path+'/'+id) : db.ref(path).push();
-            ref.set(data).then(() => closeModal());
+            ref.set(data).then(() => { closeAllModals(); alert("Saved!"); });
         }
 
-        function loadList(path, elementId) {
+        function loadList(path, elId) {
             db.ref(path).on('value', s => {
-                const l = document.getElementById(elementId); l.innerHTML = '';
+                const l = document.getElementById(elId); l.innerHTML = '';
                 s.forEach(c => {
                     const v = c.val();
                     l.innerHTML += `<div class="item-row">
-                        <span>${v.name || v.title}</span>
-                        <div class="actions">
-                            <i class="fas fa-edit" onclick="editMedia('${path}', '${c.key}')"></i>
-                            <i class="fas fa-trash" onclick="del('${path}/${c.key}')"></i>
-                        </div>
+                        <div class="item-info"><b>${v.name || v.title}</b><small>${v.url ? v.url.substring(0,30) : ''}...</small></div>
+                        <div class="actions"><i class="fas fa-edit" onclick="editMedia('${path}', '${c.key}')"></i><i class="fas fa-trash" onclick="del('${path}/${c.key}')"></i></div>
                     </div>`;
                 });
             });
@@ -367,9 +354,29 @@
                 document.getElementById('media-id').value = id;
                 document.getElementById('m-name').value = v.name || v.title;
                 document.getElementById('m-url').value = v.url;
-                document.getElementById('m-poster').value = v.logo;
+                document.getElementById('m-logo').value = v.logo;
                 if(path==='channels') { document.getElementById('m-lic').value = v.licUrl || ''; document.getElementById('m-token').value = v.token || ''; }
                 openModal('media-modal');
+            });
+        }
+
+        // --- SLIDER CRUD ---
+        function openSliderForm() { openModal('slider-modal'); }
+        function saveSlider() {
+            const id = document.getElementById('sl-id').value;
+            const data = { section: document.getElementById('sl-section').value, image: document.getElementById('sl-img').value, action: document.getElementById('sl-action').value };
+            const ref = id ? db.ref('carousels/'+id) : db.ref('carousels').push();
+            ref.set(data).then(() => closeModal());
+        }
+        function loadSliders() {
+            db.ref('carousels').on('value', s => {
+                const l = document.getElementById('slider-list'); l.innerHTML = '';
+                s.forEach(c => {
+                    l.innerHTML += `<div class="item-row">
+                        <div class="item-info"><b>${c.val().section.toUpperCase()} SLIDE</b></div>
+                        <i class="fas fa-trash" onclick="del('carousels/${c.key}')"></i>
+                    </div>`;
+                });
             });
         }
 
@@ -382,7 +389,7 @@
                     l.innerHTML += `<div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <b>${st.title}</b>
-                            <button class="btn btn-outline btn-sm" onclick="openEpModal('${c.key}')">+ PART</button>
+                            <button class="btn btn-outline btn-sm" onclick="openEpForm('${c.key}')">+ PART</button>
                         </div>
                         <div id="ep-list-${c.key}" style="margin-top:10px; opacity:0.6;"></div>
                         <div class="actions" style="margin-top:10px; justify-content:flex-end;">
@@ -390,28 +397,46 @@
                         </div>
                     </div>`;
                     db.ref(`simulizi/${c.key}/parts`).on('value', ps => {
-                        const box = document.getElementById('ep-list-'+c.key); box.innerHTML = '';
-                        ps.forEach(p => box.innerHTML += `<div style="font-size:10px;">• ${p.val().title} <i class="fas fa-times" onclick="del('simulizi/${c.key}/parts/${p.key}')"></i></div>`);
+                        const box = document.getElementById('ep-list-'+c.key); if(!box) return; box.innerHTML = '';
+                        ps.forEach(p => box.innerHTML += `<div style="font-size:10px;">• ${p.val().title} <i class="fas fa-edit" onclick="editEp('${c.key}', '${p.key}')"></i></div>`);
                     });
                 });
             });
         }
-
-        function openEpModal(sid) { document.getElementById('ep-sid').value = sid; openModal('ep-modal'); }
+        function openEpForm(sid) { document.getElementById('ep-sid').value = sid; openModal('ep-modal'); }
         function saveEpisode() {
-            const sid = document.getElementById('ep-sid').value;
-            db.ref(`simulizi/${sid}/parts`).push({ title: document.getElementById('ep-title').value, body: document.getElementById('ep-body').value }).then(() => closeModal());
+            const sid = document.getElementById('ep-sid').value, eid = document.getElementById('ep-id').value;
+            const ref = eid ? db.ref(`simulizi/${sid}/parts/${eid}`) : db.ref(`simulizi/${sid}/parts`).push();
+            ref.set({ title: document.getElementById('ep-title').value, body: document.getElementById('ep-body').value }).then(() => closeModal());
         }
 
-        // --- USERS & HWID ---
+        // --- ADS LOGIC ---
+        function addSocialRow() {
+            const div = document.createElement('div'); div.className = 'social-input-row';
+            div.innerHTML = `<input class="input-box s-ico" placeholder="Icon"><input class="input-box s-url" placeholder="URL">`;
+            document.getElementById('soc-hub-box').appendChild(div);
+        }
+        function saveAd() {
+            const soc = []; document.querySelectorAll('.social-input-row').forEach(r => {
+                const i = r.querySelector('.s-ico').value; const u = r.querySelector('.s-url').value;
+                if(i) soc.push({ icon: i, url: u });
+            });
+            db.ref('ads/config').set({ name: document.getElementById('ad-name').value, image: document.getElementById('ad-media').value, marqueeTop: document.getElementById('ad-m-top').value, marqueeBottom: document.getElementById('ad-m-bottom').value, social: soc }).then(() => closeModal());
+        }
+        function loadAds() {
+            db.ref('ads/config').on('value', s => {
+                const l = document.getElementById('ads-list'); l.innerHTML = s.exists() ? `<div class="item-row"><b>Active: ${s.val().name}</b><i class="fas fa-trash" onclick="del('ads/config')"></i></div>` : 'No Ad Configured';
+            });
+        }
+
+        // --- USERS ---
         function loadUsers() {
             db.ref('users').on('value', s => {
                 const l = document.getElementById('user-list'); l.innerHTML = '';
                 s.forEach(c => {
                     const u = c.val();
                     l.innerHTML += `<div class="item-row" style="flex-direction:column; align-items:flex-start;">
-                        <b>${u.email}</b>
-                        <small style="opacity:0.6">HWID: ${u.hwid || 'NONE'} | PASS: ${u.password || '---'}</small>
+                        <b>${u.email}</b><small>HWID: ${u.hwid || 'NOT LOCKED'} | PASS: ${u.password || '---'}</small>
                         <div style="display:flex; gap:10px; margin-top:8px;">
                             <button class="btn btn-outline btn-sm" onclick="db.ref('users/${c.key}/hwid').remove(); alert('Unlocked')">Reset HWID</button>
                             <button class="btn btn-outline btn-sm" style="color:red" onclick="del('users/${c.key}')">Delete</button>
@@ -421,28 +446,6 @@
             });
         }
 
-        // --- ADS LOGIC ---
-        function addSocialField() {
-            const div = document.createElement('div'); div.className = 'social-input-row';
-            div.innerHTML = `<input class="input-box s-ico" placeholder="Icon"><input class="input-box s-url" placeholder="URL">`;
-            document.getElementById('social-hub-box').appendChild(div);
-        }
-        function saveAd() {
-            const soc = []; document.querySelectorAll('.social-input-row').forEach(r => {
-                const icon = r.querySelector('.s-ico').value; const url = r.querySelector('.s-url').value;
-                if(icon) soc.push({ icon, url });
-            });
-            const data = { name: document.getElementById('ad-sponsor').value, image: document.getElementById('ad-media').value, marqueeTop: document.getElementById('ad-marquee-top').value, marqueeBottom: document.getElementById('ad-marquee-bottom').value, social: soc };
-            db.ref('ads/config').set(data).then(() => closeModal());
-        }
-        function loadAds() {
-            db.ref('ads/config').on('value', s => {
-                const l = document.getElementById('ads-list'); l.innerHTML = '';
-                if(s.exists()) l.innerHTML = `<div class="item-row"><b>Active Ad: ${s.val().name}</b><i class="fas fa-trash" onclick="del('ads/config')"></i></div>`;
-            });
-        }
-
-        // --- DASHBOARD ---
         function loadDash() {
             db.ref('users').on('value', s => document.getElementById('st-users').innerText = s.numChildren());
             db.ref('channels').on('value', s => document.getElementById('st-channels').innerText = s.numChildren());
@@ -456,7 +459,7 @@
             if(!user) {
                 const e = prompt("Admin Email:"); const p = prompt("Password:");
                 auth.signInWithEmailAndPassword(e, p).catch(() => location.reload());
-            } else { switchView('dash', null); }
+            } else { switchTab('dash', null); }
         });
     </script>
 </body>
